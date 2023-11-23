@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">NetworkingNav</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="passwords_not_match">Passwords don\'t match</string>
+    <string name="name">Name</string>
+    <string name="auth_login">Login</string>
+    <string name="auth_password">Password</string>
+    <string name="repeat_the_password">Repeat the Password</string>
+    <string name="registration">Registration</string>
+
+    <!-- Фрагмент fragment_signin.xml -->
+    <string name="signin">Sign In</string>
+
+    <!-- Меню menu_auth.xml -->
+    <string name="logout">Logout</string>
+    <string name="login">Login</string>
+    <string name="retry">retry\n</string>
+    <string name="hello">Hello World!</string>
+    <string name="description_post_author_avatar">Post author avatar</string>
+    <string name="description_post_menu">Post menu</string>
+    <string name="description_post_like">Like</string>
+    <string name="description_post_share">Share</string>
+    <string name="description_post_save">Save</string>
+    <string name="menu_remove">Remove</string>
+    <string name="post_text">Post Text</string>
+    <string name="menu_edit">Edit</string>
+    <string name="error_empty_content">Content can\'t be empty</string>
+    <string name="chooser_share_post">Share post</string>
+    <string name="add_post">Add post</string>
+    <string name="retry_loading">Retry</string>
+    <string name="empty_posts">There are no posts.\nIf you create a new post, it will appear here</string>
+    <string name="error_loading">Something went wrong. Try again later</string>
+    <string name="save">Save</string>
+    <string name="google_play_unavailable">Google Api Unavailable</string>
+    <string name="notification_user_liked">User %1$s liked %2$s\'s post</string>
+    <string name="error_response">Error %1$s (%2$d)</string>
+    <string name="channel_remote_name">Server notifications</string>
+    <string name="channel_remote_description">Notifications from remote server</string>
+    <string name="newer">New posts (%1$d)</string>
+    <string name="clear">clear</string>
+    <string name="error">Error!</string>
+    <string name="need_login">You need to log in.</string>
+    <string name="ok">ОК</string>
+    <string name="get_out">Are you sure you want to get out?</string>
+    <string name="yes">Yes</string>
+    <string name="cansel">Cansel</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="week_ago">Week ago</string>
+</resources>
