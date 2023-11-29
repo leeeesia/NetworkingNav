@@ -1,6 +1,7 @@
 package ru.networkignav.auth
 
 import android.content.Context
+import android.util.Log
 import androidx.core.content.edit
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
@@ -30,6 +31,7 @@ class AppAuth @Inject constructor(
     private val _state = MutableStateFlow<AuthModel?>(null)
     val state = _state.asStateFlow()
     var pushToken: PushToken? = null
+
 
     init {
         val token = prefs.getString(TOKEN_KEY, null)

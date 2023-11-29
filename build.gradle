@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 buildscript {
     ext.kotlin_version = "1.9.0"
     ext.hilt_version = "2.48.1"
-    ext.android_gradle_version = '8.1.0'
+    ext.android_gradle_version = '8.1.4'
 }
 
 plugins {

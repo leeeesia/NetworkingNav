@@ -1,6 +1,7 @@
 package ru.networkignav.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -47,12 +48,15 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+
         val binding = FragmentHomeBinding.inflate(inflater, container, false)
         var currentAuthMenuProvider: MenuProvider? = null
         val dialog = MyDialog()
 
         authViewModel.data.observe(viewLifecycleOwner) { authModel ->
+
             currentAuthMenuProvider?.let(requireActivity()::removeMenuProvider)
+
             requireActivity().addMenuProvider(object : MenuProvider {
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                     menuInflater.inflate(R.menu.menu_auth, menu)
@@ -92,6 +96,7 @@ class HomeFragment : Fragment() {
         })
         binding.newsFeedRecyclerView.adapter = adapter.withLoadStateHeaderAndFooter(
             header = PostLoadingStateAdapter {
+
                 adapter.retry()
             },
             footer = PostLoadingStateAdapter {
