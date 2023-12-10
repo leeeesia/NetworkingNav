@@ -1,15 +1,10 @@
 package ru.networkignav.dto
 
 
-data class User(
+data class Users(
     val id: String,
-    val username: String="",
-    val email: String="",
-    val fullName: String="",
-    val bio: String?= null,
-    val profileImage: String?="",
-    val followers: Int=0,
-    val following: Int=0
+    val login: String,
+    val name: String,
 )
 data class UserJob(
     val id: String,
@@ -21,7 +16,7 @@ data class UserJob(
 )
 
 data class UserProfile(
-    val user: User,
+    val user: Users,
     val posts: List<Post>,
     val events: List<Event>,
     val jobs: List<UserJob>,

@@ -12,8 +12,9 @@ import retrofit2.http.Query
 import ru.networkignav.dto.Event
 import ru.networkignav.dto.Media
 import ru.networkignav.dto.Post
-import ru.networkignav.dto.User
+import ru.networkignav.dto.Users
 import ru.networkignav.model.AuthModel
+import ru.networkignav.model.PushToken
 
 interface PostApiService {
     @GET("/api/posts/latest")
@@ -73,7 +74,7 @@ interface PostApiService {
 
     // Users
     @GET("/api/users/")
-    suspend fun getUsers(): Response<List<User>>
+    suspend fun getUsers(): Response<List<Users>>
 
     //@POST("/api/users/authentication/")
     //suspend fun authenticateUser(@Body authRequest: AuthRequest): Response<AuthModel>
@@ -86,7 +87,8 @@ interface PostApiService {
     // Wall
     @GET("/api/{author_id}/wall/")
     suspend fun getWallByAuthor(@Path("author_id") authorId: String): Response<List<Post>>
-
+    @POST("users/push-tokens")
+    suspend fun sendPushToken(@Body body: PushToken):Response<Media>
     @GET("/api/{author_id}/wall/latest/")
     suspend fun getLatestWallByAuthor(@Path("author_id") authorId: String): Response<List<Post>>
 

@@ -1,4 +1,4 @@
-package ru.netology.nmedia.entity
+package ru.networkignav.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

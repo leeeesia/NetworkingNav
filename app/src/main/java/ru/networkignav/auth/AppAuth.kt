@@ -24,7 +24,7 @@ import javax.inject.Singleton
 @Singleton
 class AppAuth @Inject constructor(
     @ApplicationContext
-    private val context: Context
+    private val context: Context,
 ) {
 
     private val prefs = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
@@ -46,22 +46,21 @@ class AppAuth @Inject constructor(
     }
 
     @Synchronized
-    fun setAuth(id: Long, token: String){
+    fun setAuth(id: Long, token: String) {
         prefs.edit {
-            putString(TOKEN_KEY,token)
+            putString(TOKEN_KEY, token)
             putLong(ID_KEY, id)
         }
 
-        _state.value = AuthModel(id,token)
+        _state.value = AuthModel(id, token)
         //sendPushToken()
     }
 
 
-
     @Synchronized
-    fun removeAuth(){
+    fun removeAuth() {
         _state.value = AuthModel()
-        with(prefs.edit()){
+        with(prefs.edit()) {
             clear()
             commit()
         }
@@ -69,30 +68,29 @@ class AppAuth @Inject constructor(
     }
 
     @Synchronized
-    fun clearAuth(){
+    fun clearAuth() {
         prefs.edit { clear() }
-        _state.value  = null
+        _state.value = null
     }
 
     @InstallIn(SingletonComponent::class)
     @EntryPoint
-    interface  AppAuthEntryPoint{
+    interface AppAuthEntryPoint {
         fun getApiService(): PostApiService
     }
 
-    //fun sendPushToken(token: String? = null){
-    //    GlobalScope.launch {
-    //        val tokenDto = PushToken(token ?: Firebase.messaging.token.await())
-    //        val entryPoint =
-    //        EntryPointAccessors.fromApplication(context, AppAuthEntryPoint::class.java)
-    //        kotlin.runCatching {
-    //            entryPoint.getApiService() .sendPushToken(tokenDto)
-    //        }
-//
-    //        pushToken = tokenDto
-    //    }
-    //}
+    fun sendPushToken(token: String? = null) {
+        GlobalScope.launch {
+            val tokenDto = PushToken(token ?: Firebase.messaging.token.await())
+            val entryPoint =
+                EntryPointAccessors.fromApplication(context, AppAuthEntryPoint::class.java)
+            kotlin.runCatching {
+                entryPoint.getApiService().sendPushToken(tokenDto)
+            }
 
+            pushToken = tokenDto
+        }
+    }
 
 
     fun isUserValid() = state.value != null

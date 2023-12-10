@@ -57,11 +57,11 @@ class PostsAdapter(
 
         fun bind(post: Post) {
             binding.apply {
-                author.text = post.userId
-                content.text = post.text
-                createdAt.text = post.createdAt
+                author.text = post.users?.name ?: "0"
+                content.text = post.content
+                createdAt.text = ""
 
-                val userId = post.userId
+                val userId = post.users?.userId
                 val url = "https://netomedia.ru/users/$userId/avatar"
                 Glide.with(postUserAvatar)
                     .load(url)

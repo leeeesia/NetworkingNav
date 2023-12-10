@@ -7,9 +7,9 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import retrofit2.HttpException
 import ru.networkignav.dao.PostDao
-import ru.netology.nmedia.dao.PostRemoteKeyDao
+import ru.networkignav.dao.PostRemoteKeyDao
 import ru.networkignav.entity.PostEntity
-import ru.netology.nmedia.entity.PostRemoteKeyEntity
+import ru.networkignav.entity.PostRemoteKeyEntity
 import ru.netology.nmedia.util.ApiError
 import ru.networkignav.api.PostApiService
 import ru.networkignav.db.AppDb
@@ -57,14 +57,14 @@ class PostRemoteMediator(
                         val remoteKeys = mutableListOf(
                             PostRemoteKeyEntity(
                                 PostRemoteKeyEntity.KeyType.AFTER,
-                                body.first().id,
+                                body.first().id.toString(),
                             )
                         )
                         if (postDao.isEmpty()) {
                             remoteKeys.add(
                                 PostRemoteKeyEntity(
                                     PostRemoteKeyEntity.KeyType.BEFORE,
-                                    body.last().id,
+                                    body.last().id.toString(),
                                 )
                             )
                         }
@@ -75,7 +75,7 @@ class PostRemoteMediator(
                         postRemoteKeyDao.insert(
                             PostRemoteKeyEntity(
                                 PostRemoteKeyEntity.KeyType.AFTER,
-                                body.first().id,
+                                body.first().id.toString(),
                             )
                         )
                     }
@@ -84,7 +84,7 @@ class PostRemoteMediator(
                         postRemoteKeyDao.insert(
                             PostRemoteKeyEntity(
                                 PostRemoteKeyEntity.KeyType.BEFORE,
-                                body.last().id,
+                                body.last().id.toString(),
                             )
                         )
                     }

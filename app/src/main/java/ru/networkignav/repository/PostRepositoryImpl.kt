@@ -9,7 +9,7 @@ import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import ru.netology.nmedia.dao.PostRemoteKeyDao
+import ru.networkignav.dao.PostRemoteKeyDao
 import ru.netology.nmedia.util.ApiError
 import ru.networkignav.api.PostApiService
 import ru.networkignav.dao.PostDao

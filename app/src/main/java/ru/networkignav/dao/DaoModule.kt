@@ -1,10 +1,9 @@
-package ru.netology.nmedia.dao
+package ru.networkignav.dao
 
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.networkignav.dao.PostDao
 import ru.networkignav.db.AppDb
 
 @InstallIn(SingletonComponent::class)

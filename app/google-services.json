@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "801463423600",
+    "project_id": "networkignav",
+    "storage_bucket": "networkignav.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:801463423600:android:9d9b2ffbd57fb7579e1ab5",
+        "android_client_info": {
+          "package_name": "ru.networkignav"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZdr6sxGvDL6caXibdmm7AlNLquAuO7DA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

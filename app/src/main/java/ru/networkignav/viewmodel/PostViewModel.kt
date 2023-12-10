@@ -24,8 +24,21 @@ import ru.networkignav.dto.FeedItem
 import ru.networkignav.dto.Post
 import javax.inject.Inject
 
+
 private val empty: Post =
-    Post(id = "", userId = "", text = "", media = null, location = null, createdAt = "",hidden = false)
+    Post(
+        id = 0,
+        authorId = 0,
+        author = "",
+        content = "",
+        published = 0L,
+        mentionedMe = false,
+        likedByMe = false,
+        attachment =null,
+        ownedByMe = false,
+        users = null,
+        hidden = false
+    )
 
 @HiltViewModel
 @ExperimentalCoroutinesApi

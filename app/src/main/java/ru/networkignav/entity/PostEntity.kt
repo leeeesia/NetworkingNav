@@ -1,33 +1,52 @@
 package ru.networkignav.entity
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import ru.networkignav.dto.Media
+import androidx.room.Relation
+import ru.networkignav.dto.Attachment
 import ru.networkignav.dto.Post
 
 @Entity
 data class PostEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: String,
-    val userId: String,
-    val text: String,
-    val media: Media?,
-    val location: String?,
-    val createdAt: String,
+    val id: Int,
+    val authorId: Int,
+    val author: String,
+    val content: String,
+    val published: Long,
+    val mentionedMe : Boolean,
+    val likedByMe: Boolean,
+    val ownedByMe:Boolean = false,
     val hidden: Boolean = false,
+    @Embedded
+    var attachment: Attachment?,
+    @Embedded
+    val users: Users?,
 ) {
-    fun toDto() = Post(id, userId, text,media, location, createdAt,hidden)
+    @Entity
+    data class Users(
+        val userId: String,
+        val login: String,
+        val name: String,
+    )
+    fun toDto() = Post(id,  authorId, author,content, published,mentionedMe, likedByMe, attachment, ownedByMe, users, hidden)
+
 
     companion object {
         fun fromDto(dto: Post) =
             PostEntity(
                 dto.id,
-                dto.userId,
-                dto.text,
-                dto.media,
-                dto.location,
-                dto.createdAt,
-                dto.hidden
+                dto.authorId,
+                dto.author,
+                dto.content,
+                dto.published,
+                dto.mentionedMe,
+                dto.likedByMe,
+                dto.ownedByMe,
+                dto.hidden,
+                dto.attachment,
+                dto.users,
             )
 
     }

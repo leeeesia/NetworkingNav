@@ -12,7 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import ru.netology.nmedia.viewmodel.SignUpViewModel
+import ru.networkignav.viewmodel.SignUpViewModel
 import ru.networkignav.R
 import ru.networkignav.auth.AppAuth
 import ru.networkignav.databinding.FragmentRegistrationBinding

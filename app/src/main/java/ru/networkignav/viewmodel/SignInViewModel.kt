@@ -1,4 +1,4 @@
-package ru.netology.nmedia.viewmodel
+package ru.networkignav.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

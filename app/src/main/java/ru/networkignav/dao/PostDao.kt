@@ -39,11 +39,11 @@ interface PostDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertShadow(posts: List<PostEntity>)
 
-    @Query("UPDATE PostEntity SET text = :text WHERE id = :id")
+    @Query("UPDATE PostEntity SET content = :text WHERE id = :id")
     suspend fun updateContentById(id: String, text: String)
 
     suspend fun save(post: PostEntity) =
-        if (post.id == "0") insert(post) else updateContentById(post.id, post.text)
+        if (post.id == 0) insert(post) else updateContentById(post.id.toString(), post.content)
 
 
 

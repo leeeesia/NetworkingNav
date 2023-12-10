@@ -1,10 +1,10 @@
-package ru.netology.nmedia.dao
+package ru.networkignav.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import ru.netology.nmedia.entity.PostRemoteKeyEntity
+import ru.networkignav.entity.PostRemoteKeyEntity
 
 @Dao
 interface PostRemoteKeyDao {
