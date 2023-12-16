@@ -59,25 +59,7 @@ class ApiModule {
     fun provideRetrofit(
         okHttpClient: OkHttpClient,
     ): Retrofit = Retrofit.Builder()
-        .addConverterFactory(
-            GsonConverterFactory.create(
-                GsonBuilder()
-                    .registerTypeAdapter(
-                        LocalDateTime::class.java,
-                        object : TypeAdapter<LocalDateTime>() {
-                            override fun write(out: JsonWriter?, value: LocalDateTime) {
-                                value.atZone(ZoneId.systemDefault()).toInstant()
-                            }
-
-                            override fun read(reader: JsonReader): LocalDateTime =
-                                LocalDateTime.ofInstant(
-                                    Instant.ofEpochSecond(reader.nextLong()),
-                                    ZoneId.systemDefault(),
-                                )
-                        })
-                    .create()
-            )
-        )
+        .addConverterFactory(GsonConverterFactory.create())
         .baseUrl(BASE_URL)
         .client(okHttpClient)
         .build()

@@ -14,13 +14,13 @@ data class PostEntity(
     val authorId: Int,
     val author: String,
     val content: String,
-    val published: Long,
+    val published: String,
     val mentionedMe : Boolean,
     val likedByMe: Boolean,
     val ownedByMe:Boolean = false,
     val hidden: Boolean = false,
     @Embedded
-    var attachment: Attachment?,
+    var attachment: Attachment? ,
     @Embedded
     val users: Users?,
 ) {

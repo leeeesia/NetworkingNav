@@ -1,23 +1,16 @@
 package ru.networkignav.auth
 
 import android.content.Context
-import android.util.Log
 import androidx.core.content.edit
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
-import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import ru.networkignav.api.PostApiService
-import ru.networkignav.model.PushToken
 import ru.networkignav.model.AuthModel
+import ru.networkignav.model.PushToken
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -79,18 +72,7 @@ class AppAuth @Inject constructor(
         fun getApiService(): PostApiService
     }
 
-    fun sendPushToken(token: String? = null) {
-        GlobalScope.launch {
-            val tokenDto = PushToken(token ?: Firebase.messaging.token.await())
-            val entryPoint =
-                EntryPointAccessors.fromApplication(context, AppAuthEntryPoint::class.java)
-            kotlin.runCatching {
-                entryPoint.getApiService().sendPushToken(tokenDto)
-            }
 
-            pushToken = tokenDto
-        }
-    }
 
 
     fun isUserValid() = state.value != null

@@ -12,7 +12,7 @@ data class Post(
     val authorId: Int,
     val author: String,
     val content: String,
-    val published: Long,
+    val published: String,
     val mentionedMe: Boolean,
     val likedByMe: Boolean,
     val attachment: Attachment?,

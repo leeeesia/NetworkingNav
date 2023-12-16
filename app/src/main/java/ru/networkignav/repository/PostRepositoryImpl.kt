@@ -39,17 +39,7 @@ class PostRepositoryImpl @Inject constructor(
             appDb = appDb,
         )
     ).flow
-        .map { pagingData ->
-            pagingData.map(PostEntity::toDto)
-            //it.map(PostEntity::toDto)
-            //    .insertSeparators { previous, _ ->
-            //        if (previous?.id?.rem(5) == 0L) {
-            //             Ad(Random.nextLong(),"figma.jpg" )
-            //        } else{
-            //        null
-            //    }
-            //    }
-        }
+        .map { it.map (PostEntity::toDto) }
 
     override fun getNewerCount(): Flow<Int> = flow {
         while (true) {

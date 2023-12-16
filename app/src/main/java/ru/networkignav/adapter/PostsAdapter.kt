@@ -1,6 +1,7 @@
 package ru.networkignav.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import ru.networkignav.R
 import ru.networkignav.databinding.PostItemBinding
+import ru.networkignav.dto.AttachmentType
 import ru.networkignav.dto.FeedItem
 import ru.networkignav.dto.Post
 
@@ -68,11 +70,23 @@ class PostsAdapter(
                     .circleCrop()
                     .timeout(10_000)
                     .into(postUserAvatar)
+                if (post.attachment !== null) {
+                    if (post.attachment.type == AttachmentType.IMAGE) {
+                        postImage.visibility = View.VISIBLE
+                        Glide.with(postImage)
+                            .load("http://10.0.2.2:9999/media/${post.attachment.url}")
+                            .timeout(10_000)
+                            .into(postImage)
+
+                    } else {
+                        postImage.visibility = View.GONE
+                    }
+                } else {
+                    postImage.visibility = View.GONE
+                }
             }
         }
     }
-
-
 
 
     class PostDiffCallback : DiffUtil.ItemCallback<FeedItem>() {
