@@ -20,11 +20,11 @@ interface PostApiService {
     @GET("/api/posts/latest")
     suspend fun getLatest(@Query("count") count: Int): Response<List<Post>>
 
-    @GET("/api/posts/{id}/before")
-    suspend fun getBefore(@Path("id") id: Long, @Query("count") count: Int): Response<List<Post>>
+    @GET("/api/posts/{post_id}/before/")
+    suspend fun getBefore(@Path("post_id") id: String, @Query("count") count: Int): Response<List<Post>>
 
-    @GET("/api/posts/{id}/after")
-    suspend fun getAfter(@Path("id") id: Long, @Query("count") count: Int): Response<List<Post>>
+    @GET("/api/posts/{post_id}/after/")
+    suspend fun getAfter(@Path("post_id") id: String, @Query("count") count: Int): Response<List<Post>>
 
     // Events
     @GET("/api/events/")
@@ -99,14 +99,14 @@ interface PostApiService {
     @POST("/api/users/authentication")
     suspend fun updateUser(
         @Field("login") login: String,
-        @Field("pass") pass: String,
+        @Field("password") password: String,
     ): Response<AuthModel>
 
     @FormUrlEncoded
     @POST("/api/users/registration")
     suspend fun registerUser(
         @Field("login") login: String,
-        @Field("pass") pass: String,
+        @Field("password") password: String,
         @Field("name") name: String,
     ): Response<AuthModel>
 }

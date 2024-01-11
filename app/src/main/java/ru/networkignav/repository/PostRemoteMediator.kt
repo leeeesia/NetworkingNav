@@ -1,5 +1,6 @@
 package ru.networkignav.repository
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -27,9 +28,15 @@ class PostRemoteMediator(
         try {
             val result = when (loadType) {
                 LoadType.REFRESH -> {
-                    postRemoteKeyDao.max()?.let { id ->
-                        apiService.getAfter(id = id, count = state.config.pageSize)
-                    } ?: apiService.getLatest(state.config.pageSize)
+                    val result = postRemoteKeyDao.max()?.let { id ->
+                        apiService.getAfter(id = id.toString(), count = state.config.pageSize)
+                    }
+
+                    if (result == null || !result.isSuccessful || result.body().isNullOrEmpty()) {
+                        apiService.getLatest(state.config.pageSize)
+                    } else {
+                        result
+                    }
                 }
 
                 LoadType.PREPEND -> {
@@ -38,7 +45,7 @@ class PostRemoteMediator(
 
                 LoadType.APPEND -> {
                     val id = postRemoteKeyDao.min() ?: return MediatorResult.Success(false)
-                    apiService.getBefore(id = id, count = state.config.pageSize)
+                    apiService.getBefore(id = id.toString(), count = state.config.pageSize)
                 }
             }
             if (!result.isSuccessful) {
@@ -52,19 +59,21 @@ class PostRemoteMediator(
 
 
             appDb.withTransaction {
+
                 when (loadType) {
+
                     LoadType.REFRESH -> {
                         val remoteKeys = mutableListOf(
                             PostRemoteKeyEntity(
                                 PostRemoteKeyEntity.KeyType.AFTER,
-                                body.first().id.toString(),
+                                body.first().id,
                             )
                         )
                         if (postDao.isEmpty()) {
                             remoteKeys.add(
                                 PostRemoteKeyEntity(
                                     PostRemoteKeyEntity.KeyType.BEFORE,
-                                    body.last().id.toString(),
+                                    body.last().id,
                                 )
                             )
                         }
@@ -75,7 +84,7 @@ class PostRemoteMediator(
                         postRemoteKeyDao.insert(
                             PostRemoteKeyEntity(
                                 PostRemoteKeyEntity.KeyType.AFTER,
-                                body.first().id.toString(),
+                                body.first().id,
                             )
                         )
                     }
@@ -84,7 +93,7 @@ class PostRemoteMediator(
                         postRemoteKeyDao.insert(
                             PostRemoteKeyEntity(
                                 PostRemoteKeyEntity.KeyType.BEFORE,
-                                body.last().id.toString(),
+                                body.last().id,
                             )
                         )
                     }
@@ -92,6 +101,7 @@ class PostRemoteMediator(
                 }
 
                 postDao.insert(body.map(PostEntity::fromDto))
+
             }
 
             return MediatorResult.Success(body.isEmpty())

@@ -2,7 +2,7 @@ package ru.networkignav.model
 
 
 data class AuthModel(
-    val id: Long = 0L,
+    val id: Int = 0,
     val token: String? = null,
 )
 

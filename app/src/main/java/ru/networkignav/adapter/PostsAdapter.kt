@@ -1,8 +1,16 @@
 package ru.networkignav.adapter
 
+import android.content.Context
+import android.media.MediaPlayer
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.MediaController
+import android.widget.VideoView
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.ExoPlayer
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -24,6 +32,7 @@ interface OnInteractionListener {
 }
 
 class PostsAdapter(
+    private val context: Context,
     private val onInteractionListener: OnInteractionListener,
 ) : PagingDataAdapter<FeedItem, RecyclerView.ViewHolder>(PostDiffCallback()) {
 
@@ -38,7 +47,7 @@ class PostsAdapter(
             R.layout.post_item -> {
                 val binding =
                     PostItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                PostViewHolder(binding, onInteractionListener)
+                PostViewHolder(context, binding, onInteractionListener)
             }
 
             else -> error("unknown item type: $viewType")
@@ -53,36 +62,78 @@ class PostsAdapter(
     }
 
     class PostViewHolder(
+        private val context: Context,
         private val binding: PostItemBinding,
         private val onInteractionListener: OnInteractionListener,
     ) : RecyclerView.ViewHolder(binding.root) {
+        private val mediaController = MediaController(context)
+        val player = ExoPlayer.Builder(context).build()
+
+        init {
+            binding.postAudio.player = player
+            binding.postVideo.player = player
+        }
 
         fun bind(post: Post) {
             binding.apply {
-                author.text = post.users?.name ?: "0"
+                author.text = post.author
                 content.text = post.content
-                createdAt.text = ""
+                createdAt.text = post.published
 
-                val userId = post.users?.userId
-                val url = "https://netomedia.ru/users/$userId/avatar"
+                val url = post.authorAvatar
+                    ?: "https://ob-kassa.ru/content/front/buhoskol_tmp1/images/reviews-icon.jpg"
                 Glide.with(postUserAvatar)
                     .load(url)
                     .circleCrop()
                     .timeout(10_000)
                     .into(postUserAvatar)
-                if (post.attachment !== null) {
-                    if (post.attachment.type == AttachmentType.IMAGE) {
-                        postImage.visibility = View.VISIBLE
-                        Glide.with(postImage)
-                            .load("http://10.0.2.2:9999/media/${post.attachment.url}")
-                            .timeout(10_000)
-                            .into(postImage)
+                if (post.attachment != null) {
+                    when (post.attachment.type) {
+                        AttachmentType.IMAGE -> {
+                            val imageUrl = post.attachment.url
+                            postImage.visibility = View.VISIBLE
+                            Glide.with(postImage)
+                                .load(imageUrl)
+                                .timeout(10_000)
+                                .into(postImage)
 
-                    } else {
-                        postImage.visibility = View.GONE
+                            postVideo.visibility = View.GONE
+                            postAudio.visibility = View.GONE
+                        }
+
+                        AttachmentType.VIDEO -> {
+                            val videoUrl = post.attachment.url
+                            postVideo.visibility = View.VISIBLE
+
+                            val mediaItem = MediaItem.fromUri(videoUrl)
+                            postAudio.visibility = View.VISIBLE
+                            player.setMediaItem(mediaItem)
+                            player.prepare()
+
+                            postVideo.requestFocus()
+
+                            postImage.visibility = View.GONE
+                            postAudio.visibility = View.GONE
+                        }
+
+                        AttachmentType.AUDIO -> {
+
+                            val audioUrl = post.attachment.url
+                            val mediaItem = MediaItem.fromUri(audioUrl)
+                            postAudio.visibility = View.VISIBLE
+                            player.setMediaItem(mediaItem)
+                            player.prepare()
+
+
+
+                            postImage.visibility = View.GONE
+                            postVideo.visibility = View.GONE
+                        }
                     }
                 } else {
                     postImage.visibility = View.GONE
+                    postVideo.visibility = View.GONE
+                    postAudio.visibility = View.GONE
                 }
             }
         }

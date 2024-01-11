@@ -30,6 +30,7 @@ private val empty: Post =
         id = 0,
         authorId = 0,
         author = "",
+        authorAvatar = "",
         content = "",
         published = "",
         mentionedMe = false,

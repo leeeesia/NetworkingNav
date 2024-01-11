@@ -13,6 +13,7 @@ data class PostEntity(
     val id: Int,
     val authorId: Int,
     val author: String,
+    val authorAvatar:String?,
     val content: String,
     val published: String,
     val mentionedMe : Boolean,
@@ -30,7 +31,7 @@ data class PostEntity(
         val login: String,
         val name: String,
     )
-    fun toDto() = Post(id,  authorId, author,content, published,mentionedMe, likedByMe, attachment, ownedByMe, users, hidden)
+    fun toDto() = Post(id,  authorId, author, authorAvatar,content, published,mentionedMe, likedByMe, attachment, ownedByMe, users, hidden)
 
 
     companion object {
@@ -39,6 +40,7 @@ data class PostEntity(
                 dto.id,
                 dto.authorId,
                 dto.author,
+                dto.authorAvatar,
                 dto.content,
                 dto.published,
                 dto.mentionedMe,

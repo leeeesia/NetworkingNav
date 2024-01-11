@@ -16,7 +16,7 @@ class AuthViewModel @Inject constructor(
     private val appAuth: AppAuth
 ) : ViewModel() {
     init {
-        Log.d("MyLog", "00000000000")
+        Log.d("MyLog", "1111")
     }
 
     val data = appAuth.state

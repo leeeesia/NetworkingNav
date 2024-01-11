@@ -19,16 +19,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="ru.networkignav.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_profile" />
-
-    <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="ru.networkignav.ui.notifications.NotificationsFragment"
+        android:id="@+id/navigation_profile"
+        android:name="ru.networkignav.ui.profile.ProfileFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/signInFragment"
         android:name="ru.networkignav.ui.SignInFragment"

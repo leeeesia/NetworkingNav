@@ -11,6 +11,7 @@ data class Post(
     override val id: Int,
     val authorId: Int,
     val author: String,
+    val authorAvatar: String?,
     val content: String,
     val published: String,
     val mentionedMe: Boolean,
@@ -34,5 +35,7 @@ data class Attachment(
 
 
 enum class AttachmentType {
-    IMAGE
+    IMAGE,
+    VIDEO,
+    AUDIO
 }

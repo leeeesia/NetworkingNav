@@ -1,5 +1,6 @@
 package ru.networkignav.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -30,6 +31,7 @@ import ru.networkignav.adapter.OnInteractionListener
 import ru.networkignav.adapter.PostsAdapter
 import ru.networkignav.auth.AppAuth
 import ru.networkignav.databinding.FragmentHomeBinding
+import ru.networkignav.dto.Post
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -91,8 +93,27 @@ class HomeFragment : Fragment() {
         }
 
 
-        val adapter = PostsAdapter(object : OnInteractionListener{
+        val adapter = PostsAdapter(requireContext(), object : OnInteractionListener {
+            override fun onEdit(post: Post) {
 
+            }
+
+            override fun onViewImage(post: Post) {
+
+            }
+
+            override fun onLike(post: Post) {
+
+            }
+
+            override fun onRemove(post: Post) {
+
+            }
+
+
+            override fun onShare(post: Post) {
+
+            }
         })
         binding.newsFeedRecyclerView.adapter = adapter.withLoadStateHeaderAndFooter(
             header = PostLoadingStateAdapter {
