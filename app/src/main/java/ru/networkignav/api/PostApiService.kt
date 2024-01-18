@@ -63,6 +63,10 @@ interface PostApiService {
     // Posts
     @GET("/api/posts/")
     suspend fun getPosts(): Response<List<Post>>
+    @GET("/api/posts/{post_id}/")
+    suspend fun getPostsById(@Path("post_id") postId: String): Response<List<Post>>
+
+
 
     @POST("/api/posts/")
     suspend fun createPost(@Body post: Post): Response<Post>
@@ -75,6 +79,7 @@ interface PostApiService {
     // Users
     @GET("/api/users/")
     suspend fun getUsers(): Response<List<Users>>
+
 
     //@POST("/api/users/authentication/")
     //suspend fun authenticateUser(@Body authRequest: AuthRequest): Response<AuthModel>

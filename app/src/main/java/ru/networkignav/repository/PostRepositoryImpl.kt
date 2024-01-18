@@ -73,6 +73,28 @@ class PostRepositoryImpl @Inject constructor(
         dao.insert(posts.map(PostEntity::fromDto))
     }
 
+    override suspend fun getPostsByUserId(userId: String) {
+        val response = apiService.getWallByAuthor(userId)
+        if (!response.isSuccessful) {
+            throw ApiError(response.code(), response.message())
+        }
+
+        val posts = response.body() ?: throw RuntimeException("Body is empty")
+
+        dao.insert(posts.map(PostEntity::fromDto))
+    }
+
+    override suspend fun getMyWall() {
+        val response = apiService.getMyWall()
+        if (!response.isSuccessful) {
+            throw ApiError(response.code(), response.message())
+        }
+
+        val posts = response.body() ?: throw RuntimeException("Body is empty")
+
+        dao.insert(posts.map(PostEntity::fromDto))
+    }
+
     override fun getNewPost() {
         dao.getNewPost()
     }

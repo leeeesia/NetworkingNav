@@ -11,6 +11,8 @@ interface PostRepository {
     val data: Flow<PagingData<FeedItem>>
     fun getNewerCount(): Flow<Int>
     suspend fun getAll()
+    suspend fun getPostsByUserId(userId: String)
+    suspend fun getMyWall()
     fun getNewPost()
 
     suspend fun signIn(login: String, password: String): AuthModel

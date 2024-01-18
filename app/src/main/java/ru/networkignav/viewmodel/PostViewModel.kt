@@ -2,16 +2,19 @@ package ru.networkignav.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
+import dagger.assisted.AssistedFactory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -47,7 +50,10 @@ class PostViewModel @Inject constructor(
     private val repository: PostRepository,
     appAuth: AppAuth,
 ) : ViewModel() {
-
+    @dagger.assisted.AssistedFactory
+    interface AssistedFactory {
+        fun create(savedStateHandle: SavedStateHandle): PostViewModel
+    }
     private val cached: Flow<PagingData<FeedItem>> = repository
         .data
         .cachedIn(viewModelScope)
@@ -95,6 +101,30 @@ class PostViewModel @Inject constructor(
             _state.postValue(FeedModelState(loading = true))
             try {
                 repository.getAll()
+                _state.postValue(FeedModelState())
+            } catch (e: Exception) {
+                _state.value = FeedModelState(error = true)
+            }
+        }
+
+    }
+    fun loadWallByUserId(userId: String): Flow<List<Post>> = flow{
+        viewModelScope.launch {
+            _state.postValue(FeedModelState(loading = true))
+            try {
+                repository.getPostsByUserId(userId)
+                _state.postValue(FeedModelState())
+            } catch (e: Exception) {
+                _state.value = FeedModelState(error = true)
+            }
+        }
+    }
+    fun loadMyWall(){
+        // Начинаем загрузку
+        viewModelScope.launch {
+            _state.postValue(FeedModelState(loading = true))
+            try {
+                repository.getMyWall()
                 _state.postValue(FeedModelState())
             } catch (e: Exception) {
                 _state.value = FeedModelState(error = true)
