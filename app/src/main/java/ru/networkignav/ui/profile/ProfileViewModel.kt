@@ -21,8 +21,9 @@ import ru.networkignav.dto.Post
 import ru.networkignav.model.FeedModelState
 import ru.networkignav.model.PhotoModel
 import ru.networkignav.repository.PostRepository
+
 import ru.networkignav.util.SingleLiveEvent
-import ru.networkignav.viewmodel.PostViewModel
+
 import javax.inject.Inject
 
 private val empty: Post =
@@ -45,12 +46,11 @@ private val empty: Post =
 @HiltViewModel
 @ExperimentalCoroutinesApi
 class ProfileViewModel @Inject constructor(
-    private val postViewModel: PostViewModel,
     private val repository: PostRepository,
     appAuth: AppAuth,
 ) : ViewModel() {
 
-    private val cached: Flow<PagingData<FeedItem>> = repository.data.cachedIn(viewModelScope)
+    private val cached: Flow<PagingData<FeedItem>> = repository.data_profile.cachedIn(viewModelScope)
     private val _state = MutableLiveData<FeedModelState>()
     val state: LiveData<FeedModelState> get() = _state
 
@@ -64,7 +64,7 @@ class ProfileViewModel @Inject constructor(
         get() = _postCreated
 
     val newerCount: Flow<Int> = data.flatMapLatest {
-        repository.getNewerCount().flowOn(Dispatchers.Default)
+        repository.getProfileNewerCount().flowOn(Dispatchers.Default)
     }
 
     private val _photo = MutableLiveData<PhotoModel?>(null)
@@ -79,18 +79,12 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch {
             _state.postValue(FeedModelState(loading = true))
             try {
-                // Сначала загружаем данные из репозитория
                 repository.getMyWall()
-
-                // Затем загружаем данные через postViewModel
-                postViewModel.loadMyWall()
-
-                // Если не возникло исключений, устанавливаем состояние успешной загрузки
                 _state.postValue(FeedModelState())
             } catch (e: Exception) {
-                // В случае ошибки, устанавливаем состояние ошибки
-                _state.postValue(FeedModelState(error = true))
+                _state.value = FeedModelState(error = true)
             }
         }
     }
+
 }

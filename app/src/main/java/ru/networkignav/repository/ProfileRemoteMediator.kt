@@ -17,7 +17,7 @@ import ru.networkignav.db.AppDb
 import java.io.IOException
 
 @OptIn(ExperimentalPagingApi::class)
-class PostRemoteMediator(
+class ProfileRemoteMediator(
     private val apiService: PostApiService,
     private val postDao: PostDao,
     private val postRemoteKeyDao: PostRemoteKeyDao,
@@ -28,11 +28,11 @@ class PostRemoteMediator(
             val result = when (loadType) {
                 LoadType.REFRESH -> {
                     val result = postRemoteKeyDao.max()?.let { id ->
-                        apiService.getAfter(id = id.toString(), count = state.config.pageSize)
+                        apiService.getAfterMyWall(id = id.toString(), count = state.config.pageSize)
                     }
 
                     if (result == null || !result.isSuccessful || result.body().isNullOrEmpty()) {
-                        apiService.getLatest(state.config.pageSize)
+                        apiService.getLatestMyWall(state.config.pageSize)
                     } else {
                         result
                     }
@@ -44,7 +44,7 @@ class PostRemoteMediator(
 
                 LoadType.APPEND -> {
                     val id = postRemoteKeyDao.min() ?: return MediatorResult.Success(false)
-                    apiService.getBefore(id = id.toString(), count = state.config.pageSize)
+                    apiService.getBeforeMyWall(id = id.toString(), count = state.config.pageSize)
                 }
             }
             if (!result.isSuccessful) {

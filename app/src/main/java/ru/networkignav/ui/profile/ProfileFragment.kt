@@ -46,12 +46,11 @@ class ProfileFragment : Fragment() {
     lateinit var appUser: AppAuth
 
 
-
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
 
         val binding = FragmentProfileBinding.inflate(inflater, container, false)
@@ -127,6 +126,15 @@ class ProfileFragment : Fragment() {
                 adapter.retry()
             }
         )
+        if (authViewModel.isAutificated) with(binding) {
+            newsFeedRecyclerView.visibility = View.VISIBLE
+            //profileTitle.text = viewModel.ge
+
+        } else {
+            binding.newsFeedRecyclerView.visibility = View.GONE
+        }
+
+
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {

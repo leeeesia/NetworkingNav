@@ -1,12 +1,15 @@
 package ru.networkignav.api
 
 import kotlinx.coroutines.Job
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 import ru.networkignav.dto.Event
@@ -54,9 +57,14 @@ interface PostApiService {
     // MyWall
     @GET("/api/my/wall/")
     suspend fun getMyWall(): Response<List<Post>>
-
     @GET("/api/my/wall/latest/")
-    suspend fun getLatestMyWall(): Response<List<Post>>
+    suspend fun getLatestMyWall(@Query("count")count: Int): Response<List<Post>>
+    @GET("/api/my/wall/{post_id}/before/")
+    suspend fun getBeforeMyWall(@Path("post_id") id: String, @Query("count") count: Int): Response<List<Post>>
+    @GET("/api/my/wall/{post_id}/newer/")
+    suspend fun getAfterMyWall(@Path("post_id") id: String, @Query("count") count: Int): Response<List<Post>>
+
+
 
     // ... Другие эндпоинты для стены пользователя
 
@@ -66,8 +74,11 @@ interface PostApiService {
     @GET("/api/posts/{post_id}/")
     suspend fun getPostsById(@Path("post_id") postId: String): Response<List<Post>>
 
-
-
+    @POST("/api/posts")
+    suspend fun savePosts(@Body post: Post): Response<Post>
+    @Multipart
+    @POST("media")
+    suspend fun uploadMedia(@Part file: MultipartBody.Part): Response<Media>
     @POST("/api/posts/")
     suspend fun createPost(@Body post: Post): Response<Post>
 

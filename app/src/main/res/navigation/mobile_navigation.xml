@@ -16,13 +16,20 @@
         <action
             android:id="@+id/action_navigation_home_to_signUpFragment"
             app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_newPostFragment"
+            app:destination="@id/newPostFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_profile"
         android:name="ru.networkignav.ui.profile.ProfileFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_navigation_profile_to_newPostFragment"
+            app:destination="@id/newPostFragment" />
+    </fragment>
     <fragment
         android:id="@+id/signInFragment"
         android:name="ru.networkignav.ui.SignInFragment"
@@ -31,4 +38,9 @@
         android:id="@+id/signUpFragment"
         android:name="ru.netology.nmedia.activity.SignUpFragment"
         android:label="SignUpFragment" />
+    <fragment
+        android:id="@+id/newPostFragment"
+        android:name="ru.networkignav.ui.NewPostFragment"
+        android:label="fragment_new_post"
+        tools:layout="@layout/fragment_new_post" />
 </navigation>

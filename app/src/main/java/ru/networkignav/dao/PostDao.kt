@@ -45,8 +45,6 @@ interface PostDao {
     suspend fun save(post: PostEntity) =
         if (post.id == 0) insert(post) else updateContentById(post.id.toString(), post.content)
 
-
-
     @Query("DELETE FROM PostEntity WHERE id = :id")
     suspend fun removeById(id: Long)
 }

@@ -9,7 +9,7 @@ import ru.networkignav.auth.AppAuth
 import ru.networkignav.model.AuthModelState
 import ru.networkignav.model.AuthResponse
 import ru.networkignav.repository.PostRepository
-import ru.netology.nmedia.util.ApiError
+import ru.networkignav.util.ApiError
 import javax.inject.Inject
 
 @HiltViewModel

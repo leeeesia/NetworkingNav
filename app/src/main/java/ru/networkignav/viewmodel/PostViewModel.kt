@@ -50,10 +50,6 @@ class PostViewModel @Inject constructor(
     private val repository: PostRepository,
     appAuth: AppAuth,
 ) : ViewModel() {
-    @dagger.assisted.AssistedFactory
-    interface AssistedFactory {
-        fun create(savedStateHandle: SavedStateHandle): PostViewModel
-    }
     private val cached: Flow<PagingData<FeedItem>> = repository
         .data
         .cachedIn(viewModelScope)
@@ -119,19 +115,6 @@ class PostViewModel @Inject constructor(
             }
         }
     }
-    fun loadMyWall(){
-        // Начинаем загрузку
-        viewModelScope.launch {
-            _state.postValue(FeedModelState(loading = true))
-            try {
-                repository.getMyWall()
-                _state.postValue(FeedModelState())
-            } catch (e: Exception) {
-                _state.value = FeedModelState(error = true)
-            }
-        }
-
-    }
 
     fun loadNewPosts() {
         // Начинаем загрузку
@@ -160,6 +143,32 @@ class PostViewModel @Inject constructor(
         }
 
     }
+    fun save() {
+        viewModelScope.launch {
+            edited.value?.let {
+                try {
+                    _photo.value?.let { photoModel ->
+                        repository.saveWithAttachment(it, photoModel.file)
+                    } ?: run {
+                        repository.save(it)
+                    }
+                    _state.value = FeedModelState()
+                } catch (e: Exception) {
+                    _state.value = FeedModelState(error = true)
+                }
+            }
+            edited.value = empty
+        }
+
+    }
+    fun changeContent(content: String) {
+        val text = content.trim()
+        if (edited.value?.content == text) {
+            return
+        }
+        edited.value = edited.value?.copy(content = text)
+    }
+
 
 
 }

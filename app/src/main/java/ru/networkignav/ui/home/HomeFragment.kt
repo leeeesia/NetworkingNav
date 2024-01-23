@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -17,7 +18,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -125,41 +128,41 @@ class HomeFragment : Fragment() {
             }
         )
 
-        //lifecycleScope.launch {
-        //    repeatOnLifecycle(Lifecycle.State.CREATED) {
-        //        adapter.loadStateFlow.collectLatest {
-        //            binding.swiperefresh.isRefreshing =
-        //                it.refresh is LoadState.Loading
-        //        }
-        //    }
-        //}
-        //binding.swiperefresh.setOnRefreshListener {
-        //    adapter.refresh()
-        //}
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                adapter.loadStateFlow.collectLatest {
+                    binding.swiperefresh.isRefreshing =
+                        it.refresh is LoadState.Loading
+                }
+            }
+        }
+        binding.swiperefresh.setOnRefreshListener {
+            adapter.refresh()
+        }
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
-            //nding.progress.isVisible = state.loading
-            //nding.errorGroup.isVisible = state.error
-            //nding.swiperefresh.isRefreshing = false
+            binding.progress.isVisible = state.loading
+            binding.errorGroup.isVisible = state.error
+            binding.swiperefresh.isRefreshing = false
 
-            // (state.error) {
-            //  val message = if (state.response.code == 0) {
-            //      getString(R.string.error_loading)
-            //  } else {
-            //      getString(
-            //          R.string.error_response,
-            //          state.response.message.toString(),
-            //          state.response.code
-            //      )
-            //  }
-            //  Snackbar.make(
-            //      binding.root,
-            //      message,
-            //      Snackbar.LENGTH_LONG
-            //  ).setAction(android.R.string.ok) {
-            //      return@setAction
-            //  }.show()
-            //}
+            if (state.error) {
+                val message = if (state.response.code == 0) {
+                    getString(R.string.error_loading)
+                } else {
+                    getString(
+                        R.string.error_response,
+                        state.response.message.toString(),
+                        state.response.code
+                    )
+                }
+                Snackbar.make(
+                    binding.root,
+                    message,
+                    Snackbar.LENGTH_LONG
+                ).setAction(android.R.string.ok) {
+                    return@setAction
+                }.show()
+            }
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
@@ -171,14 +174,14 @@ class HomeFragment : Fragment() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-                //viewModel.newerCount.collectLatest {
-                //    if (it == 0) {
-                //        binding.fabNewer.hide()
-                //    } else {
-                //        binding.fabNewer.text = getString(R.string.newer, it)
-                //        binding.fabNewer.show()
-                //    }
-                //}
+                viewModel.newerCount.collectLatest {
+                    if (it == 0) {
+                        binding.fabNewer.hide()
+                    } else {
+                        binding.fabNewer.text = getString(R.string.newer, it)
+                        binding.fabNewer.show()
+                    }
+                }
             }
         }
 
@@ -187,23 +190,23 @@ class HomeFragment : Fragment() {
         }
 
 
-        //binding.retryButton.setOnClickListener {
-        //    adapter.refresh()
-        //}
+        binding.retryButton.setOnClickListener {
+            adapter.refresh()
+        }
 
-        //binding.fab.setOnClickListener {
-        //    if (appAuth.isUserValid()) {
-        //        findNavController().navigate(R.id.action_feedFragment_to_newPostFragment)
-        //    } else {
-        //        dialog.show(parentFragmentManager.beginTransaction(), "dialog")
-        //        findNavController().navigate(R.id.action_feedFragment_to_signInFragment)
-        //    }
-        //}
+        binding.fab.setOnClickListener {
+            if (appUser.isUserValid()) {
+                findNavController().navigate(R.id.action_navigation_home_to_newPostFragment)
+            } else {
+                dialog.show(parentFragmentManager.beginTransaction(), "dialog")
+                findNavController().navigate(R.id.action_navigation_home_to_signInFragment)
+            }
+        }
 
-        //binding.fabNewer.setOnClickListener {
-        //    viewModel.loadNewPosts()
-        //    binding.fabNewer.hide()
-        //}
+        binding.fabNewer.setOnClickListener {
+            viewModel.loadNewPosts()
+            binding.fabNewer.hide()
+        }
 
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {

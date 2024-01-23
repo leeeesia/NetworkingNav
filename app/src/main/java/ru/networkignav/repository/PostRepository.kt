@@ -9,7 +9,9 @@ import ru.networkignav.dto.Post
 
 interface PostRepository {
     val data: Flow<PagingData<FeedItem>>
+    val data_profile: Flow<PagingData<FeedItem>>
     fun getNewerCount(): Flow<Int>
+    fun getProfileNewerCount(): Flow<Int>
     suspend fun getAll()
     suspend fun getPostsByUserId(userId: String)
     suspend fun getMyWall()
@@ -18,6 +20,8 @@ interface PostRepository {
     suspend fun signIn(login: String, password: String): AuthModel
 
     suspend fun signUp(login: String, password: String, name: String): AuthModel
+    suspend fun save(post: Post)
+    suspend fun saveWithAttachment(post: Post, file: File)
 
 
 }
