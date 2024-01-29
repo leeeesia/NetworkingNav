@@ -30,6 +30,7 @@ import ru.networkignav.util.MyDialog
 import ru.networkignav.viewmodel.AuthViewModel
 import ru.networkignav.viewmodel.PostViewModel
 import ru.networkignav.R
+import ru.networkignav.adapter.EventsAdapter
 import ru.networkignav.adapter.OnInteractionListener
 import ru.networkignav.adapter.PostsAdapter
 import ru.networkignav.auth.AppAuth
@@ -46,7 +47,7 @@ class HomeFragment : Fragment() {
 
     @Inject
     lateinit var appUser: AppAuth
-
+    private var dataType: Int = DataType.POSTS
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -94,33 +95,58 @@ class HomeFragment : Fragment() {
 
             }.also { currentAuthMenuProvider = it }, viewLifecycleOwner)
         }
+        val adapter = when (dataType) {
+            DataType.POSTS -> PostsAdapter(requireContext(), object : OnInteractionListener {
+                override fun onEdit(post: Post) {
+
+                }
+
+                override fun onViewImage(post: Post) {
+
+                }
+
+                override fun onLike(post: Post) {
+
+                }
+
+                override fun onRemove(post: Post) {
+
+                }
 
 
-        val adapter = PostsAdapter(requireContext(), object : OnInteractionListener {
-            override fun onEdit(post: Post) {
+                override fun onShare(post: Post) {
 
-            }
+                }
+            })
+            DataType.EVENTS -> EventsAdapter(requireContext(), object : OnInteractionListener {
+                override fun onEdit(post: Post) {
 
-            override fun onViewImage(post: Post) {
+                }
 
-            }
+                override fun onViewImage(post: Post) {
 
-            override fun onLike(post: Post) {
+                }
 
-            }
+                override fun onLike(post: Post) {
 
-            override fun onRemove(post: Post) {
+                }
 
-            }
+                override fun onRemove(post: Post) {
+
+                }
 
 
-            override fun onShare(post: Post) {
+                override fun onShare(post: Post) {
 
-            }
-        })
+                }
+            })
+            //DataType.JOBS -> JobsAdapter(jobsList, onInteractionListener)
+            //DataType.USERS -> UsersAdapter(usersList, onInteractionListener)
+            else -> throw IllegalArgumentException("Unsupported data type")
+        }
+
         binding.newsFeedRecyclerView.adapter = adapter.withLoadStateHeaderAndFooter(
             header = PostLoadingStateAdapter {
-
                 adapter.retry()
             },
             footer = PostLoadingStateAdapter {
@@ -217,5 +243,15 @@ class HomeFragment : Fragment() {
         })
 
         return binding.root
+    }
+
+
+    companion object {
+        private object DataType {
+            const val POSTS = 1
+            const val EVENTS = 2
+            const val JOBS = 3
+            const val USERS = 4
+        }
     }
 }

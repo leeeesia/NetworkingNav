@@ -24,10 +24,16 @@ interface PostApiService {
     suspend fun getLatest(@Query("count") count: Int): Response<List<Post>>
 
     @GET("/api/posts/{post_id}/before/")
-    suspend fun getBefore(@Path("post_id") id: String, @Query("count") count: Int): Response<List<Post>>
+    suspend fun getBefore(
+        @Path("post_id") id: String,
+        @Query("count") count: Int,
+    ): Response<List<Post>>
 
     @GET("/api/posts/{post_id}/after/")
-    suspend fun getAfter(@Path("post_id") id: String, @Query("count") count: Int): Response<List<Post>>
+    suspend fun getAfter(
+        @Path("post_id") id: String,
+        @Query("count") count: Int,
+    ): Response<List<Post>>
 
     // Events
     @GET("/api/events/")
@@ -57,13 +63,21 @@ interface PostApiService {
     // MyWall
     @GET("/api/my/wall/")
     suspend fun getMyWall(): Response<List<Post>>
-    @GET("/api/my/wall/latest/")
-    suspend fun getLatestMyWall(@Query("count")count: Int): Response<List<Post>>
-    @GET("/api/my/wall/{post_id}/before/")
-    suspend fun getBeforeMyWall(@Path("post_id") id: String, @Query("count") count: Int): Response<List<Post>>
-    @GET("/api/my/wall/{post_id}/newer/")
-    suspend fun getAfterMyWall(@Path("post_id") id: String, @Query("count") count: Int): Response<List<Post>>
 
+    @GET("/api/my/wall/latest/")
+    suspend fun getLatestMyWall(@Query("count") count: Int): Response<List<Post>>
+
+    @GET("/api/my/wall/{post_id}/before/")
+    suspend fun getBeforeMyWall(
+        @Path("post_id") id: String,
+        @Query("count") count: Int,
+    ): Response<List<Post>>
+
+    @GET("/api/my/wall/{post_id}/newer/")
+    suspend fun getAfterMyWall(
+        @Path("post_id") id: String,
+        @Query("count") count: Int,
+    ): Response<List<Post>>
 
 
     // ... Другие эндпоинты для стены пользователя
@@ -71,14 +85,17 @@ interface PostApiService {
     // Posts
     @GET("/api/posts/")
     suspend fun getPosts(): Response<List<Post>>
+
     @GET("/api/posts/{post_id}/")
     suspend fun getPostsById(@Path("post_id") postId: String): Response<List<Post>>
 
     @POST("/api/posts")
     suspend fun savePosts(@Body post: Post): Response<Post>
+
     @Multipart
     @POST("media")
     suspend fun uploadMedia(@Part file: MultipartBody.Part): Response<Media>
+
     @POST("/api/posts/")
     suspend fun createPost(@Body post: Post): Response<Post>
 
@@ -99,12 +116,16 @@ interface PostApiService {
     //suspend fun registerUser(@Body registrationRequest: RegistrationRequest): Response<AuthModel>
 
     // ... Другие эндпоинты для пользователей
+    @GET("/api/users/{user_id}/")
+    suspend fun getUser(@Path("user_id") userId: String): Response<Users>
 
     // Wall
     @GET("/api/{author_id}/wall/")
     suspend fun getWallByAuthor(@Path("author_id") authorId: String): Response<List<Post>>
+
     @POST("users/push-tokens")
-    suspend fun sendPushToken(@Body body: PushToken):Response<Media>
+    suspend fun sendPushToken(@Body body: PushToken): Response<Media>
+
     @GET("/api/{author_id}/wall/latest/")
     suspend fun getLatestWallByAuthor(@Path("author_id") authorId: String): Response<List<Post>>
 
@@ -125,4 +146,6 @@ interface PostApiService {
         @Field("password") password: String,
         @Field("name") name: String,
     ): Response<AuthModel>
+
+
 }

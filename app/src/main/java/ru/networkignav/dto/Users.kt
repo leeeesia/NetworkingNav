@@ -1,11 +1,15 @@
 package ru.networkignav.dto
 
+import kotlinx.coroutines.flow.Flow
+
 
 data class Users(
-    val id: String,
+    val id: Int,
     val login: String,
     val name: String,
+    val avatar: String
 )
+
 data class UserJob(
     val id: String,
     val userId: String,

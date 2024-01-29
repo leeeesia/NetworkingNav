@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NetworkingNav</string>
+    <string name="title_home">Домой</string>
+    <string name="title_dashboard">Панель управления</string>
+    <string name="title_notifications">Уведомления</string>
+    <string name="passwords_not_match">Пароли не совпадают</string>
+    <string name="name">Имя</string>
+    <string name="auth_login">Логин</string>
+    <string name="auth_password">Пароль</string>
+    <string name="repeat_the_password">Повторите пароль</string>
+    <string name="registration">Регистрация</string>
+
+    <!-- Фрагмент fragment_signin.xml -->
+    <string name="signin">Вход</string>
+
+    <!-- Меню menu_auth.xml -->
+    <string name="logout">Выйти</string>
+    <string name="login">Войти</string>
+    <string name="retry">Повторить\n</string>
+    <string name="hello">Привет, мир!</string>
+    <string name="description_post_author_avatar">Аватар автора поста</string>
+    <string name="description_post_menu">Меню поста</string>
+    <string name="description_post_like">Лайк</string>
+    <string name="description_post_share">Поделиться</string>
+    <string name="description_post_save">Сохранить</string>
+    <string name="menu_remove">Удалить</string>
+    <string name="post_text">Текст поста</string>
+    <string name="menu_edit">Редактировать</string>
+    <string name="error_empty_content">Содержание не может быть пустым</string>
+    <string name="chooser_share_post">Поделиться постом</string>
+    <string name="add_post">Добавить пост</string>
+    <string name="retry_loading">Повторить</string>
+    <string name="empty_posts">Здесь нет постов.\nЕсли вы создадите новый пост, он появится здесь</string>
+    <string name="error_loading">Что-то пошло не так. Попробуйте позже</string>
+    <string name="save">Сохранить</string>
+    <string name="google_play_unavailable">Google Api недоступен</string>
+    <string name="notification_user_liked">Пользователь %1$s лайкнул пост пользователя %2$s</string>
+    <string name="error_response">Ошибка %1$s (%2$d)</string>
+    <string name="channel_remote_name">Удаленные уведомления</string>
+    <string name="channel_remote_description">Уведомления от удаленного сервера</string>
+    <string name="newer">Новые посты (%1$d)</string>
+    <string name="clear">очистить</string>
+    <string name="error">Ошибка!</string>
+    <string name="need_login">Вам нужно войти.</string>
+    <string name="ok">ОК</string>
+    <string name="get_out">Вы уверены, что хотите выйти?</string>
+    <string name="yes">Да</string>
+    <string name="cansel">Отмена</string>
+    <string name="today">Сегодня</string>
+    <string name="yesterday">Вчера</string>
+    <string name="week_ago">Неделю назад</string>
+    <string name="posts">Посты</string>
+    <string name="events">События</string>
+    <string name="jobs">Работы</string>
+    <string name="users">Пользователи</string>
+
+</resources>

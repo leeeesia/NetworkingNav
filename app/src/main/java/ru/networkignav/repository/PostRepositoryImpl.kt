@@ -1,6 +1,7 @@
 package ru.networkignav.repository
 
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -16,6 +17,7 @@ import ru.networkignav.util.ApiError
 import ru.networkignav.util.NetworkError
 import ru.networkignav.util.UnknownError
 import ru.networkignav.api.PostApiService
+import ru.networkignav.auth.AppAuth
 import ru.networkignav.dao.PostDao
 import ru.networkignav.db.AppDb
 import ru.networkignav.dto.Attachment
@@ -23,6 +25,7 @@ import ru.networkignav.dto.AttachmentType
 import ru.networkignav.dto.FeedItem
 import ru.networkignav.dto.Media
 import ru.networkignav.dto.Post
+import ru.networkignav.dto.Users
 import ru.networkignav.entity.PostEntity
 import ru.networkignav.entity.toEntity
 import ru.networkignav.model.AuthModel
@@ -36,6 +39,7 @@ class PostRepositoryImpl @Inject constructor(
     private val dao: PostDao,
     private val dao_profile: PostDao,
     private val apiService: PostApiService,
+    private val appAuth: AppAuth,
     postRemoteKeyDao: PostRemoteKeyDao,
     appDb: AppDb,
 ) : PostRepository {
@@ -52,18 +56,24 @@ class PostRepositoryImpl @Inject constructor(
     ).flow
         .map { it.map (PostEntity::toDto) }
 
-    @OptIn(ExperimentalPagingApi::class)
-    override val data_profile: Flow<PagingData<FeedItem>> = Pager(
-        config = PagingConfig(pageSize = 10, enablePlaceholders = false),
-        pagingSourceFactory = { dao_profile.getPagingSource() },
-        remoteMediator = ProfileRemoteMediator(
-            apiService = apiService,
-            postDao = dao_profile,
-            postRemoteKeyDao = postRemoteKeyDao,
-            appDb = appDb,
-        )
-    ).flow
-        .map { it.map (PostEntity::toDto) }
+
+    override val data_profile: Flow<List<FeedItem>> = flow {
+        try {
+            val response = apiService.getMyWall()
+            if (!response.isSuccessful) {
+                throw ApiError(response.code(), response.message())
+            }
+
+            val posts = response.body() ?: throw RuntimeException("Тело ответа пусто")
+
+            emit(posts)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw UnknownError
+        }
+    }
+
+
 
     override fun getNewerCount(): Flow<Int> = flow {
         while (true) {
@@ -116,6 +126,20 @@ class PostRepositoryImpl @Inject constructor(
         dao.insert(posts.map(PostEntity::fromDto))
     }
 
+    override suspend fun getProfile(): Users {
+        try {
+            val response = apiService.getUser(appAuth.state.value?.id.toString())
+            if (!response.isSuccessful) {
+                throw ApiError(response.code(), response.message())
+            }
+            return response.body() ?: throw ApiError(response.code(), response.message())
+        } catch (e: IOException) {
+            throw NetworkError
+        } catch (e: Exception) {
+            throw UnknownError
+        }
+    }
+
     override suspend fun getPostsByUserId(userId: String) {
         val response = apiService.getWallByAuthor(userId)
         if (!response.isSuccessful) {
@@ -127,16 +151,10 @@ class PostRepositoryImpl @Inject constructor(
         dao.insert(posts.map(PostEntity::fromDto))
     }
 
-    override suspend fun getMyWall() {
-        val response = apiService.getMyWall()
-        if (!response.isSuccessful) {
-            throw ApiError(response.code(), response.message())
-        }
 
-        val posts = response.body() ?: throw RuntimeException("Body is empty")
 
-        dao_profile.insert(posts.map(PostEntity::fromDto))
-    }
+
+
 
     override fun getNewPost() {
         dao.getNewPost()

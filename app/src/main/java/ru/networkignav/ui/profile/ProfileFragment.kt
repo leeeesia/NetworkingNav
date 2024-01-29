@@ -1,6 +1,7 @@
 package ru.networkignav.ui.profile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -17,10 +18,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import ru.networkignav.R
 import ru.networkignav.adapter.OnInteractionListener
@@ -126,20 +130,27 @@ class ProfileFragment : Fragment() {
                 adapter.retry()
             }
         )
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.loadProfile()
+        }
+
+
         if (authViewModel.isAutificated) with(binding) {
             newsFeedRecyclerView.visibility = View.VISIBLE
-            //profileTitle.text = viewModel.ge
+            viewModel.profile.observe(viewLifecycleOwner) { userProfile ->
+                profileTitle.text = userProfile?.name ?: "000000000"
+            }
 
         } else {
             binding.newsFeedRecyclerView.visibility = View.GONE
         }
 
 
-
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewModel.data.collectLatest {
-                    adapter.submitData(it)
+                    val pagingData = PagingData.from(it)
+                    adapter.submitData(pagingData)
                 }
             }
         }

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- layout_event_item.xml -->
+
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    android:elevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Имя пользователя и время создания -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="top">
+
+            <!-- Фото пользователя (круглый аватар) -->
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/postUserAvatar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/profile_avatar"
+                android:layout_marginEnd="8dp"/>
+
+            <!-- Имя пользователя и время создания -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Пользователь"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/createdAt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Создано: " />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Заголовок события -->
+        <TextView
+            android:id="@+id/eventTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Заголовок события"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Информация о событии -->
+        <TextView
+            android:id="@+id/eventInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Информация о событии"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Изображение события (может быть скрыто, если отсутствует) -->
+        <ImageView
+            android:id="@+id/eventImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/default_post_image" />
+
+        <!-- Видео события -->
+        <androidx.media3.ui.PlayerView
+            android:id="@+id/eventVideo"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Аудио события -->
+        <androidx.media3.ui.PlayerView
+            android:id="@+id/eventAudio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_audio_icon"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Местоположение события (может быть скрыто, если отсутствует) -->
+        <TextView
+            android:id="@+id/eventLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Местоположение события: " />
+
+        <!-- Дата и время события -->
+        <TextView
+            android:id="@+id/eventDateTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Дата и время события: " />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

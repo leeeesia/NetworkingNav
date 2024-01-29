@@ -49,4 +49,8 @@
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="week_ago">Week ago</string>
+    <string name="posts">Posts</string>
+    <string name="events">Events</string>
+    <string name="jobs">Jobs</string>
+    <string name="users">Users</string>
 </resources>

@@ -50,6 +50,8 @@ class AppAuth @Inject constructor(
     }
 
 
+
+
     @Synchronized
     fun removeAuth() {
         _state.value = AuthModel()
