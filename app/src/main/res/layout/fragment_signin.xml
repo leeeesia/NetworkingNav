@@ -38,7 +38,13 @@
             android:layout_height="wrap_content"
             android:ems="16"
             android:inputType="textPassword" />
-
+        <TextView
+            android:id="@+id/registration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:labelFor="@+id/password"
+            android:text="Создать новый аккаунт" />
         <Button
             android:id="@+id/signIn"
             android:layout_width="wrap_content"

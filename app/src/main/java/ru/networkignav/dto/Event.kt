@@ -1,8 +1,10 @@
 package ru.networkignav.dto
 
+import ru.networkignav.entity.AttachmentEmbeddable
+import ru.networkignav.entity.PostEntity
+
 data class Event(
     override val id: Int,
-    val title: String,
     val authorId: Int,
     val author: String,
     val authorAvatar: String?,
@@ -10,14 +12,16 @@ data class Event(
     val content: String,
     val datetime: String,
     val published: String,
-    val type: String,
-    val likeOwnerIds: List<Int> = emptyList(),
+    val type: EventType,
     val likedByMe: Boolean,
-    val speakerIds: List<Int> = emptyList(),
-    val participantsIds: List<Int> = emptyList(),
     val participatedByMe: Boolean,
     val attachment: Attachment?,
     val link: String?,
     val ownedByMe: Boolean,
-    val users: Users
+    val users: PostEntity.Users?,
+    val hidden: Boolean
 ):FeedItem
+
+enum class EventType {
+    ONLINE, OFFLINE
+}

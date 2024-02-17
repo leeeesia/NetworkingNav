@@ -4,6 +4,7 @@ import kotlinx.coroutines.Job
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -15,7 +16,7 @@ import retrofit2.http.Query
 import ru.networkignav.dto.Event
 import ru.networkignav.dto.Media
 import ru.networkignav.dto.Post
-import ru.networkignav.dto.Users
+import ru.networkignav.entity.PostEntity
 import ru.networkignav.model.AuthModel
 import ru.networkignav.model.PushToken
 
@@ -34,6 +35,8 @@ interface PostApiService {
         @Path("post_id") id: String,
         @Query("count") count: Int,
     ): Response<List<Post>>
+    @DELETE("/api/posts/{post_id}/")
+    suspend fun deletePost(@Path("id") id: String): Response<Unit>
 
     // Events
     @GET("/api/events/")
@@ -58,7 +61,8 @@ interface PostApiService {
     @POST("/api/my/jobs/")
     suspend fun createJob(@Body job: Job): Response<Job>
 
-    // ... Другие эндпоинты для работы
+    @DELETE("/api/jobs/{job_id}/")
+    suspend fun deleteJob(@Path("id") id: String): Response<Unit>
 
     // MyWall
     @GET("/api/my/wall/")
@@ -86,6 +90,8 @@ interface PostApiService {
     @GET("/api/posts/")
     suspend fun getPosts(): Response<List<Post>>
 
+
+
     @GET("/api/posts/{post_id}/")
     suspend fun getPostsById(@Path("post_id") postId: String): Response<List<Post>>
 
@@ -106,7 +112,7 @@ interface PostApiService {
 
     // Users
     @GET("/api/users/")
-    suspend fun getUsers(): Response<List<Users>>
+    suspend fun getUsers(): Response<List<PostEntity.Users>>
 
 
     //@POST("/api/users/authentication/")
@@ -117,7 +123,7 @@ interface PostApiService {
 
     // ... Другие эндпоинты для пользователей
     @GET("/api/users/{user_id}/")
-    suspend fun getUser(@Path("user_id") userId: String): Response<Users>
+    suspend fun getUser(@Path("user_id") userId: String): Response<PostEntity.Users>
 
     // Wall
     @GET("/api/{author_id}/wall/")

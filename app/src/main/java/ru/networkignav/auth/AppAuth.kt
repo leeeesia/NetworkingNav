@@ -23,6 +23,8 @@ class AppAuth @Inject constructor(
     private val prefs = context.getSharedPreferences("auth", Context.MODE_PRIVATE)
     private val _state = MutableStateFlow<AuthModel?>(null)
     val state = _state.asStateFlow()
+
+
     var pushToken: PushToken? = null
 
 
@@ -83,7 +85,6 @@ class AppAuth @Inject constructor(
 
         private const val ID_KEY = "ID_KEY"
         private const val TOKEN_KEY = "TOKEN_KEY"
-
 
     }
 }

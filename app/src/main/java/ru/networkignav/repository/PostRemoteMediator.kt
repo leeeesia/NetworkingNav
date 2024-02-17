@@ -1,5 +1,6 @@
 package ru.networkignav.repository
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -27,19 +28,12 @@ class PostRemoteMediator(
         try {
             val result = when (loadType) {
                 LoadType.REFRESH -> {
-                    val result = postRemoteKeyDao.max()?.let { id ->
-                        apiService.getAfter(id = id.toString(), count = state.config.pageSize)
-                    }
-
-                    if (result == null || !result.isSuccessful || result.body().isNullOrEmpty()) {
-                        apiService.getLatest(state.config.pageSize)
-                    } else {
-                        result
-                    }
+                    apiService.getLatest(state.config.pageSize)
                 }
 
                 LoadType.PREPEND -> {
-                    return MediatorResult.Success(true)
+                    val id = postRemoteKeyDao.max() ?: return MediatorResult.Success(false)
+                    apiService.getAfter(id.toString(), state.config.pageSize)
                 }
 
                 LoadType.APPEND -> {
@@ -54,6 +48,10 @@ class PostRemoteMediator(
             val body = result.body() ?: throw ApiError(
                 result.code(),
                 result.message()
+            )
+
+            if (body.isEmpty()) return MediatorResult.Success(
+                endOfPaginationReached = true
             )
 
 

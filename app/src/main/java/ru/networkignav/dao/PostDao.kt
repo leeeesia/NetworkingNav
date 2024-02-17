@@ -46,5 +46,8 @@ interface PostDao {
         if (post.id == 0) insert(post) else updateContentById(post.id.toString(), post.content)
 
     @Query("DELETE FROM PostEntity WHERE id = :id")
-    suspend fun removeById(id: Long)
+    suspend fun removeById(id: String)
+
+    @Query("DELETE FROM JobEntity WHERE id = :id")
+    suspend fun removeJobById(id: String)
 }

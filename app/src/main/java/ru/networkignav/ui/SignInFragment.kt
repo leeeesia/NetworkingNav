@@ -22,6 +22,7 @@ import javax.inject.Inject
 class SignInFragment : Fragment() {
 
     private val viewModel: SignInViewModel by viewModels()
+
     @Inject
     lateinit var appAuth: AppAuth
     override fun onCreateView(
@@ -45,11 +46,12 @@ class SignInFragment : Fragment() {
 
             viewModel.signIn(login, password)
 
-            lifecycleScope.launchWhenCreated {
-                appAuth.state.collectLatest {
-                    it?.let { findNavController().navigateUp() }
-                }
-            }
+            it?.let { findNavController().navigate(R.id.action_signInFragment_to_navigation_profile) }
+
+
+        }
+        binding.registration.setOnClickListener {
+            findNavController().navigate(R.id.action_signInFragment_to_signUpFragment)
         }
 
         return binding.root

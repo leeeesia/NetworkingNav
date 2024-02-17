@@ -2,10 +2,10 @@
 
 <!-- layout_post_item.xml -->
 
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="8dp"
     android:elevation="4dp">
 
@@ -17,6 +17,7 @@
 
         <!-- Имя пользователя и время создания -->
         <LinearLayout
+            android:id="@+id/authorBlock"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -49,7 +50,20 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Создано: " />
+
             </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/menu"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:icon="@drawable/baseline_more_vert_24"
+                android:background="@android:color/transparent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                style="@style/Widget.Material3.Button.IconButton"
+                />
+
         </LinearLayout>
 
         <!-- Текст поста -->
@@ -77,13 +91,6 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_audio_icon"/>
 
-        <!-- Местоположение поста (может быть скрыто, если отсутствует) -->
-        <TextView
-            android:id="@+id/postLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Местоположение: " />
 
 
     </LinearLayout>

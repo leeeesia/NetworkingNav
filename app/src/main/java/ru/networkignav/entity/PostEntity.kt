@@ -30,6 +30,7 @@ data class PostEntity(
         val userId: String,
         val login: String,
         val name: String,
+        val avatar: String?,
     )
     fun toDto() = Post(id,  authorId, author, authorAvatar,content, published,mentionedMe, likedByMe, attachment, ownedByMe, users, hidden)
 

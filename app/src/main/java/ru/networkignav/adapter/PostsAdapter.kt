@@ -3,12 +3,15 @@ package ru.networkignav.adapter
 import android.content.Context
 import android.media.MediaPlayer
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.MediaController
+import android.widget.PopupMenu
 import android.widget.VideoView
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.view.isVisible
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.paging.PagingDataAdapter
@@ -18,17 +21,27 @@ import com.bumptech.glide.Glide
 import ru.networkignav.R
 import ru.networkignav.databinding.PostItemBinding
 import ru.networkignav.dto.AttachmentType
+import ru.networkignav.dto.Event
 import ru.networkignav.dto.FeedItem
+import ru.networkignav.dto.Job
 import ru.networkignav.dto.Post
+import ru.networkignav.util.Formatter.formatPostDate
 
 interface OnInteractionListener {
     fun onLike(post: Post) {}
     fun onDislike(post: Post) {}
     fun onEdit(post: Post) {}
     fun onRemove(post: Post) {}
+    fun onEditEvent(event: Event) {}
+    fun onRemoveEvent(event: Event) {}
+    fun onEditJob(job: Job) {}
+    fun onRemoveJob(job: Job) {}
     fun onViewImage(post: Post) {}
     fun onShare(post: Post) {}
     fun onRefresh() {}
+    fun onRefreshJob() {}
+    fun onRefreshEvent() {}
+    fun onAuthorClick(post: Post){}
 }
 
 class PostsAdapter(
@@ -78,8 +91,8 @@ class PostsAdapter(
             binding.apply {
                 author.text = post.author
                 content.text = post.content
-                createdAt.text = post.published
-
+                createdAt.text = formatPostDate(post.published)
+                Log.d("MYLOG", "post ad")
                 val url = post.authorAvatar
                     ?: "https://ob-kassa.ru/content/front/buhoskol_tmp1/images/reviews-icon.jpg"
                 Glide.with(postUserAvatar)
@@ -87,6 +100,8 @@ class PostsAdapter(
                     .circleCrop()
                     .timeout(10_000)
                     .into(postUserAvatar)
+                authorBlock.setOnClickListener { onInteractionListener.onAuthorClick(post) }
+
                 if (post.attachment != null) {
                     when (post.attachment.type) {
                         AttachmentType.IMAGE -> {
@@ -135,6 +150,30 @@ class PostsAdapter(
                     postVideo.visibility = View.GONE
                     postAudio.visibility = View.GONE
                 }
+
+                menu.isVisible = post.ownedByMe
+
+                menu.setOnClickListener {
+                    PopupMenu(it.context, it).apply {
+                        inflate(R.menu.options_menu)
+                        setOnMenuItemClickListener { item ->
+                            when (item.itemId) {
+                                R.id.remove -> {
+                                    onInteractionListener.onRemove(post)
+                                    true
+                                }
+
+                                R.id.edit -> {
+                                    onInteractionListener.onEdit(post)
+                                    true
+                                }
+
+                                else -> false
+                            }
+                        }
+                    }.show()
+                }
+
             }
         }
     }

@@ -35,19 +35,78 @@ import ru.networkignav.adapter.OnInteractionListener
 import ru.networkignav.adapter.PostsAdapter
 import ru.networkignav.auth.AppAuth
 import ru.networkignav.databinding.FragmentHomeBinding
+import ru.networkignav.dto.Event
 import ru.networkignav.dto.Post
+import ru.networkignav.ui.NewPostFragment.Companion.textArg
+import ru.networkignav.util.DataType
+import ru.networkignav.viewmodel.EventViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), OnInteractionListener {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val viewModel: PostViewModel by activityViewModels()
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val eventViewModel: EventViewModel by activityViewModels()
     private val authViewModel: AuthViewModel by viewModels()
+
 
     @Inject
     lateinit var appUser: AppAuth
-    private var dataType: Int = DataType.POSTS
+
+
+    override fun onEdit(post: Post) {
+        findNavController().navigate(
+            R.id.action_navigation_home_to_newPostFragment,
+            Bundle().apply {
+                textArg = post.content
+            })
+        viewModel.edit(post)
+    }
+
+    override fun onViewImage(post: Post) {
+
+    }
+
+    override fun onLike(post: Post) {
+
+    }
+
+    override fun onRemove(post: Post) {
+        viewModel.removeById(post.id)
+    }
+
+
+    override fun onShare(post: Post) {
+
+    }
+    override fun onEditEvent(event: Event) {
+        findNavController().navigate(
+            R.id.action_navigation_home_to_newEventFragment,
+            Bundle().apply {
+                textArg = event.content
+            })
+        eventViewModel.edit(event)
+    }
+
+    override fun onRemoveEvent(event: Event) {
+        eventViewModel.removeById(event.id)
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun onAuthorClick(post: Post) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            val bundle = Bundle()
+
+            bundle.putString("userId", post.authorId.toString())
+            viewModel.updateUserId(post.authorId.toString())
+            viewModel.loadWallByUserId(post.authorId.toString())
+
+            findNavController().navigate(R.id.action_navigation_home_to_wallFragment, bundle)
+        }
+    }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -58,6 +117,7 @@ class HomeFragment : Fragment() {
         val binding = FragmentHomeBinding.inflate(inflater, container, false)
         var currentAuthMenuProvider: MenuProvider? = null
         val dialog = MyDialog()
+
 
         authViewModel.data.observe(viewLifecycleOwner) { authModel ->
 
@@ -95,54 +155,11 @@ class HomeFragment : Fragment() {
 
             }.also { currentAuthMenuProvider = it }, viewLifecycleOwner)
         }
-        val adapter = when (dataType) {
-            DataType.POSTS -> PostsAdapter(requireContext(), object : OnInteractionListener {
-                override fun onEdit(post: Post) {
-
-                }
-
-                override fun onViewImage(post: Post) {
-
-                }
-
-                override fun onLike(post: Post) {
-
-                }
-
-                override fun onRemove(post: Post) {
-
-                }
-
-
-                override fun onShare(post: Post) {
-
-                }
-            })
-            DataType.EVENTS -> EventsAdapter(requireContext(), object : OnInteractionListener {
-                override fun onEdit(post: Post) {
-
-                }
-
-                override fun onViewImage(post: Post) {
-
-                }
-
-                override fun onLike(post: Post) {
-
-                }
-
-                override fun onRemove(post: Post) {
-
-                }
-
-
-                override fun onShare(post: Post) {
-
-                }
-            })
-            //DataType.JOBS -> JobsAdapter(jobsList, onInteractionListener)
-            //DataType.USERS -> UsersAdapter(usersList, onInteractionListener)
-            else -> throw IllegalArgumentException("Unsupported data type")
+        viewModel.setDataType(DataType.POSTS)
+        var adapter = when (viewModel.dataType.value) {
+            DataType.POSTS -> PostsAdapter(requireContext(), this)
+            DataType.EVENTS -> EventsAdapter(requireContext(), this)
+            else -> throw IllegalArgumentException("Unsupported data type ${viewModel.dataType.value}")
         }
 
         binding.newsFeedRecyclerView.adapter = adapter.withLoadStateHeaderAndFooter(
@@ -153,7 +170,39 @@ class HomeFragment : Fragment() {
                 adapter.retry()
             }
         )
+        viewModel.dataType.observe(viewLifecycleOwner) { dataType ->
+            Log.d("MYLOG", "Setting data type: $dataType")
+            when (dataType) {
+                DataType.POSTS -> Log.d("MYLOG", "Setting data type 1 : $dataType ")
+                DataType.EVENTS -> Log.d("MYLOG", "Setting data type 2: $dataType ")
+                else -> Log.d("MYLOG", "NO $dataType")
+            }
+            adapter = when (dataType) {
+                DataType.POSTS -> PostsAdapter(requireContext(), this)
+                DataType.EVENTS -> EventsAdapter(requireContext(), this)
+                else -> throw IllegalArgumentException("Unsupported data type")
+            }
 
+            binding.newsFeedRecyclerView.adapter = adapter
+            adapter.refresh()
+
+            lifecycleScope.launch {
+                repeatOnLifecycle(Lifecycle.State.CREATED) {
+                    when (viewModel.dataType.value) {
+                        DataType.POSTS -> viewModel.data.collectLatest {
+                            adapter.submitData(it)
+                        }
+
+                        DataType.EVENTS -> eventViewModel.data.collectLatest {
+                            adapter.submitData(it)
+                        }
+
+                        else -> throw IllegalArgumentException("Unsupported data type ${viewModel.dataType.value}")
+                    }
+                }
+            }
+
+        }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 adapter.loadStateFlow.collectLatest {
@@ -166,68 +215,35 @@ class HomeFragment : Fragment() {
             adapter.refresh()
         }
 
-        viewModel.state.observe(viewLifecycleOwner) { state ->
-            binding.progress.isVisible = state.loading
-            binding.errorGroup.isVisible = state.error
-            binding.swiperefresh.isRefreshing = false
 
-            if (state.error) {
-                val message = if (state.response.code == 0) {
-                    getString(R.string.error_loading)
-                } else {
-                    getString(
-                        R.string.error_response,
-                        state.response.message.toString(),
-                        state.response.code
-                    )
-                }
-                Snackbar.make(
-                    binding.root,
-                    message,
-                    Snackbar.LENGTH_LONG
-                ).setAction(android.R.string.ok) {
-                    return@setAction
-                }.show()
-            }
-        }
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.data.collectLatest {
-                    adapter.submitData(it)
-                }
-            }
-        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewModel.newerCount.collectLatest {
-                    if (it == 0) {
-                        binding.fabNewer.hide()
-                    } else {
-                        binding.fabNewer.text = getString(R.string.newer, it)
-                        binding.fabNewer.show()
+                when (viewModel.dataType.value) {
+                    DataType.POSTS -> viewModel.data.collectLatest {
+                        adapter.submitData(it)
                     }
+
+                    DataType.EVENTS -> eventViewModel.data.collectLatest {
+                        adapter.submitData(it)
+                    }
+
+                    else -> throw IllegalArgumentException("Unsupported data type ${viewModel.dataType.value}")
                 }
             }
         }
+
+
 
         authViewModel.data.observe(viewLifecycleOwner) {
+
             adapter.refresh()
         }
 
 
-        binding.retryButton.setOnClickListener {
-            adapter.refresh()
-        }
 
-        binding.fab.setOnClickListener {
-            if (appUser.isUserValid()) {
-                findNavController().navigate(R.id.action_navigation_home_to_newPostFragment)
-            } else {
-                dialog.show(parentFragmentManager.beginTransaction(), "dialog")
-                findNavController().navigate(R.id.action_navigation_home_to_signInFragment)
-            }
-        }
+
+
 
         binding.fabNewer.setOnClickListener {
             viewModel.loadNewPosts()
@@ -246,12 +262,4 @@ class HomeFragment : Fragment() {
     }
 
 
-    companion object {
-        private object DataType {
-            const val POSTS = 1
-            const val EVENTS = 2
-            const val JOBS = 3
-            const val USERS = 4
-        }
-    }
 }

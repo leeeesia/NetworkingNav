@@ -1,14 +1,13 @@
 package ru.networkignav.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import dagger.assisted.AssistedFactory
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -25,6 +24,7 @@ import ru.networkignav.repository.PostRepository
 import ru.networkignav.util.SingleLiveEvent
 import ru.networkignav.dto.FeedItem
 import ru.networkignav.dto.Post
+import ru.networkignav.util.DataType
 import javax.inject.Inject
 
 
@@ -64,16 +64,19 @@ class PostViewModel @Inject constructor(
                 }
             }
         }.flowOn(Dispatchers.Default)
+    private val _dataType = MutableLiveData<DataType>()
+    val dataType: LiveData<DataType> = _dataType
 
+
+    fun setDataType(dataType: DataType) {
+        _dataType.value = dataType
+    }
     val edited = MutableLiveData(empty)
     private val _postCreated = SingleLiveEvent<Unit>()
     val postCreated: LiveData<Unit>
         get() = _postCreated
 
-    val newerCount: Flow<Int> = data.flatMapLatest {
-        repository.getNewerCount()
-            .flowOn(Dispatchers.Default)
-    }
+
 
     private val _photo = MutableLiveData<PhotoModel?>(null)
     val photo: LiveData<PhotoModel?>
@@ -108,13 +111,16 @@ class PostViewModel @Inject constructor(
         viewModelScope.launch {
             _state.postValue(FeedModelState(loading = true))
             try {
-                repository.getPostsByUserId(userId)
                 _state.postValue(FeedModelState())
             } catch (e: Exception) {
                 _state.value = FeedModelState(error = true)
             }
         }
     }
+    fun updateUserId(userId: String){
+        repository.updateUserId(userId)
+    }
+
 
     fun loadNewPosts() {
         // Начинаем загрузку
@@ -168,7 +174,21 @@ class PostViewModel @Inject constructor(
         }
         edited.value = edited.value?.copy(content = text)
     }
+    fun edit(post: Post) {
+        edited.value = post
+    }
 
+    fun removeById(id: Int) {
+        viewModelScope.launch {
+            try {
+                repository.removeById(id)
+
+            } catch (e: Exception) {
+                _state.value = FeedModelState(error = true)
+            }
+        }
+
+    }
 
 
 }

@@ -2,10 +2,10 @@
 
 <!-- layout_event_item.xml -->
 
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_margin="8dp"
     android:elevation="4dp">
 
@@ -50,24 +50,30 @@
                     android:layout_height="wrap_content"
                     android:text="Создано: " />
             </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/menu"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="end"
+                app:icon="@drawable/baseline_more_vert_24" />
+
         </LinearLayout>
 
-        <!-- Заголовок события -->
-        <TextView
-            android:id="@+id/eventTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Заголовок события"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:layout_marginTop="8dp"/>
-
-        <!-- Информация о событии -->
         <TextView
             android:id="@+id/eventInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Информация о событии"
+            android:text="Событие"
+            android:textSize="18sp"
+            android:layout_marginTop="8dp"/>
+
+
+        <TextView
+            android:id="@+id/link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ссылка"
             android:layout_marginTop="8dp"/>
 
         <!-- Изображение события (может быть скрыто, если отсутствует) -->
@@ -93,21 +99,27 @@
             android:src="@drawable/ic_audio_icon"
             android:layout_marginTop="8dp"/>
 
-        <!-- Местоположение события (может быть скрыто, если отсутствует) -->
-        <TextView
-            android:id="@+id/eventLocation"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Местоположение события: " />
+            android:orientation="horizontal">
 
-        <!-- Дата и время события -->
-        <TextView
-            android:id="@+id/eventDateTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Дата и время события: " />
+            <TextView
+                android:id="@+id/eventDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textStyle="bold"
+                android:text="Дата события: " />
+            <TextView
+                android:id="@+id/eventDateTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textStyle="bold"
+                android:text="Дата события: " />
+        </LinearLayout>
+
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

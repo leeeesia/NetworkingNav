@@ -1,9 +1,5 @@
 package ru.networkignav.api
 
-import com.google.gson.GsonBuilder
-import com.google.gson.TypeAdapter
-import com.google.gson.stream.JsonReader
-import com.google.gson.stream.JsonWriter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,9 +11,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
 import ru.networkignav.BuildConfig
 import ru.networkignav.auth.AppAuth
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -69,4 +62,16 @@ class ApiModule {
     fun provideApiService(
         retrofit: Retrofit,
     ): PostApiService = retrofit.create()
+
+    @Singleton
+    @Provides
+    fun provideEventApiService(
+        retrofit: Retrofit,
+    ): EventApiService = retrofit.create()
+
+    @Singleton
+    @Provides
+    fun provideJobApiService(
+        retrofit: Retrofit,
+    ): JobApiService = retrofit.create()
 }
