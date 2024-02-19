@@ -16,7 +16,7 @@ import ru.networkignav.auth.AppAuth
 import ru.networkignav.databinding.ActivityMainBinding
 import ru.networkignav.ui.profile.ProfileViewModel
 import ru.networkignav.util.DataType
-import ru.networkignav.util.MyDialog
+import ru.networkignav.util.AuthDialog
 import ru.networkignav.viewmodel.AuthViewModel
 import ru.networkignav.viewmodel.PostViewModel
 import javax.inject.Inject
@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val dialog = MyDialog()
+        val dialog = AuthDialog()
         viewModel.data.observe(this) {
             invalidateOptionsMenu()
         }

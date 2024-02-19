@@ -38,7 +38,7 @@ import ru.networkignav.ui.AddJobFragment.Companion.nameArg
 import ru.networkignav.ui.AddJobFragment.Companion.positionArg
 import ru.networkignav.ui.AddJobFragment.Companion.startArg
 import ru.networkignav.ui.NewPostFragment.Companion.textArg
-import ru.networkignav.util.MyDialog
+import ru.networkignav.util.AuthDialog
 import ru.networkignav.viewmodel.AuthViewModel
 import javax.inject.Inject
 
@@ -61,7 +61,7 @@ class ProfileFragment : Fragment() {
 
         val binding = FragmentProfileBinding.inflate(inflater, container, false)
         var currentAuthMenuProvider: MenuProvider? = null
-        val dialog = MyDialog()
+        val dialog = AuthDialog()
 
         authViewModel.data.observe(viewLifecycleOwner) { authModel ->
 

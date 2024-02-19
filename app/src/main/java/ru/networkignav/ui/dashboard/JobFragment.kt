@@ -20,7 +20,7 @@ import ru.networkignav.R
 import ru.networkignav.auth.AppAuth
 import ru.networkignav.databinding.FragmentHomeBinding
 import ru.networkignav.databinding.FragmentJobBinding
-import ru.networkignav.util.MyDialog
+import ru.networkignav.util.AuthDialog
 import ru.networkignav.viewmodel.AuthViewModel
 import javax.inject.Inject
 
@@ -41,7 +41,7 @@ class JobFragment : Fragment() {
     ): View {
         val binding = FragmentHomeBinding.inflate(inflater, container, false)
         var currentAuthMenuProvider: MenuProvider? = null
-        val dialog = MyDialog()
+        val dialog = AuthDialog()
 
 
         authViewModel.data.observe(viewLifecycleOwner) { authModel ->

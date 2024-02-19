@@ -22,7 +22,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.networkignav.adapter.PostLoadingStateAdapter
-import ru.networkignav.util.MyDialog
+import ru.networkignav.util.AuthDialog
 import ru.networkignav.viewmodel.AuthViewModel
 import ru.networkignav.viewmodel.PostViewModel
 import ru.networkignav.R
@@ -99,7 +99,7 @@ class HomeFragment : Fragment(), OnInteractionListener {
 
         val binding = FragmentHomeBinding.inflate(inflater, container, false)
         var currentAuthMenuProvider: MenuProvider? = null
-        val dialog = MyDialog()
+        val dialog = AuthDialog()
 
 
         authViewModel.data.observe(viewLifecycleOwner) { authModel ->
