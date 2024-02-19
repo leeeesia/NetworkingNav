@@ -1,4 +1,4 @@
-package ru.netology.nmedia.activity
+package ru.networkignav.ui
 
 
 import android.os.Bundle

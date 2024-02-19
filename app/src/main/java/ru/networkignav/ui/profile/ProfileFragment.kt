@@ -1,7 +1,6 @@
 package ru.networkignav.ui.profile
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -10,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.core.view.MenuProvider
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -18,7 +16,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -26,7 +23,6 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import ru.networkignav.R
 import ru.networkignav.adapter.JobsAdapter
@@ -56,7 +52,6 @@ class ProfileFragment : Fragment() {
     @Inject
     lateinit var appUser: AppAuth
 
-
     @OptIn(ExperimentalCoroutinesApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -68,11 +63,7 @@ class ProfileFragment : Fragment() {
         var currentAuthMenuProvider: MenuProvider? = null
         val dialog = MyDialog()
 
-
-
-
         authViewModel.data.observe(viewLifecycleOwner) { authModel ->
-
 
             currentAuthMenuProvider?.let(requireActivity()::removeMenuProvider)
 
@@ -87,13 +78,11 @@ class ProfileFragment : Fragment() {
                     return when (menuItem.itemId) {
                         R.id.signIn -> {
                             findNavController().navigate(R.id.action_navigation_home_to_signInFragment)
-                            //AppAuth.getInstance().setAuth(5, "x-token")
                             true
                         }
 
                         R.id.signUp -> {
                             findNavController().navigate(R.id.action_navigation_home_to_signUpFragment)
-                            //AppAuth.getInstance().setAuth(5, "x-token")
                             true
                         }
 
@@ -109,7 +98,6 @@ class ProfileFragment : Fragment() {
             }.also { currentAuthMenuProvider = it }, viewLifecycleOwner)
         }
 
-
         val adapter = PostsAdapter(requireContext(), object : OnInteractionListener {
             override fun onEdit(post: Post) {
                 findNavController().navigate(
@@ -124,11 +112,9 @@ class ProfileFragment : Fragment() {
             override fun onRemove(post: Post) {
                 viewModel.removeById(post.id)
             }
-
-
         })
 
-        val jobAdapter = JobsAdapter(requireContext(), object : OnInteractionListener {
+        val jobAdapter = JobsAdapter(object : OnInteractionListener {
 
             override fun onEditJob(job: Job) {
                 findNavController().navigate(
@@ -142,13 +128,10 @@ class ProfileFragment : Fragment() {
                 viewModel.editJob(job)
             }
 
-
             override fun onRemoveJob(job: Job) {
                 viewModel.removeJobById(job)
                 update()
             }
-
-
 
         }, true)
 
@@ -245,22 +228,6 @@ class ProfileFragment : Fragment() {
 
         }
 
-
-
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                //viewModel.newerCount.collectLatest {
-                //    if (it == 0) {
-                //        binding.fabNewer.hide()
-                //    } else {
-                //        binding.fabNewer.text = getString(R.string.newer, it)
-                //        binding.fabNewer.show()
-                //    }
-                //}
-            }
-        }
-
         authViewModel.data.observe(viewLifecycleOwner) {
             adapter.refresh()
         }
@@ -282,13 +249,7 @@ class ProfileFragment : Fragment() {
             }
         })
 
-
         return binding.root
-    }
-
-
-    fun onFabClicked(view: View) {
-        showPopupMenu(view)
     }
 
     private fun showPopupMenu(view: View) {

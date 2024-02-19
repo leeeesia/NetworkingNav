@@ -19,11 +19,8 @@ import ru.networkignav.auth.AppAuth
 import ru.networkignav.dto.Event
 import ru.networkignav.dto.EventType
 import ru.networkignav.dto.FeedItem
-import ru.networkignav.dto.Post
 import ru.networkignav.model.FeedModelState
-import ru.networkignav.model.PhotoModel
 import ru.networkignav.repository.EventRepository
-import ru.networkignav.util.DataType
 import ru.networkignav.util.SingleLiveEvent
 import javax.inject.Inject
 
@@ -56,7 +53,6 @@ class EventViewModel @Inject constructor(
         .data
         .cachedIn(viewModelScope)
 
-
     private val _state = MutableLiveData(FeedModelState())
     val state: LiveData<FeedModelState>
         get() = _state
@@ -71,24 +67,9 @@ class EventViewModel @Inject constructor(
         }.flowOn(Dispatchers.Default)
 
 
-
-    private val _dataType = MutableLiveData<DataType>()
-    val dataType: LiveData<DataType> = _dataType
-
-
-    fun setDataType(dataType: DataType) {
-        _dataType.value = dataType
-    }
-    val edited = MutableLiveData(empty)
-    private val _postCreated = SingleLiveEvent<Unit>()
-    val postCreated: LiveData<Unit>
-        get() = _postCreated
+    private val edited = MutableLiveData(empty)
 
     private val _eventCreated = SingleLiveEvent<Unit>()
-    val eventCreated: LiveData<Unit>
-        get() = _eventCreated
-
-
 
     fun changeContent(
         content: String,
@@ -101,13 +82,6 @@ class EventViewModel @Inject constructor(
         }
         edited.value = edited.value?.copy(content = content, datetime = date)
     }
-
-    fun clear() {
-        edited.value?.let {
-            edited.value = empty
-        }
-    }
-
 
     fun save() {
         viewModelScope.launch {
@@ -144,6 +118,4 @@ class EventViewModel @Inject constructor(
         }
 
     }
-
-
 }

@@ -11,7 +11,7 @@ import ru.networkignav.auth.AppAuth
 import javax.inject.Inject
 
 @AndroidEntryPoint
-open class MyDialog : DialogFragment() {
+open class AuthDialog : DialogFragment() {
     @Inject
     lateinit var appAuth: AppAuth
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

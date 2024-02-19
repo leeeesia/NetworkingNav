@@ -1,6 +1,5 @@
 package ru.networkignav.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,13 +17,13 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.networkignav.auth.AppAuth
+import ru.networkignav.dto.FeedItem
+import ru.networkignav.dto.Post
 import ru.networkignav.model.FeedModelState
 import ru.networkignav.model.PhotoModel
 import ru.networkignav.repository.PostRepository
-import ru.networkignav.util.SingleLiveEvent
-import ru.networkignav.dto.FeedItem
-import ru.networkignav.dto.Post
 import ru.networkignav.util.DataType
+import ru.networkignav.util.SingleLiveEvent
 import javax.inject.Inject
 
 
@@ -67,15 +66,13 @@ class PostViewModel @Inject constructor(
     private val _dataType = MutableLiveData<DataType>()
     val dataType: LiveData<DataType> = _dataType
 
-
     fun setDataType(dataType: DataType) {
         _dataType.value = dataType
     }
-    val edited = MutableLiveData(empty)
+    private val edited = MutableLiveData(empty)
     private val _postCreated = SingleLiveEvent<Unit>()
     val postCreated: LiveData<Unit>
         get() = _postCreated
-
 
 
     private val _photo = MutableLiveData<PhotoModel?>(null)
@@ -86,16 +83,11 @@ class PostViewModel @Inject constructor(
         loadPosts()
     }
 
-    fun setPhoto(photoModel: PhotoModel) {
-        _photo.value = photoModel
-    }
-
     fun clearPhoto() {
         _photo.value = null
     }
 
-    fun loadPosts() {
-        // Начинаем загрузку
+    private fun loadPosts() {
         viewModelScope.launch {
             _state.postValue(FeedModelState(loading = true))
             try {
@@ -107,7 +99,7 @@ class PostViewModel @Inject constructor(
         }
 
     }
-    fun loadWallByUserId(userId: String): Flow<List<Post>> = flow{
+    fun loadWallByUserId(): Flow<List<Post>> = flow{
         viewModelScope.launch {
             _state.postValue(FeedModelState(loading = true))
             try {
@@ -123,7 +115,6 @@ class PostViewModel @Inject constructor(
 
 
     fun loadNewPosts() {
-        // Начинаем загрузку
         viewModelScope.launch {
             _state.postValue(FeedModelState(loading = true))
             try {
@@ -136,19 +127,7 @@ class PostViewModel @Inject constructor(
 
     }
 
-    fun refresh() {
-        // Начинаем загрузку
-        viewModelScope.launch {
-            _state.postValue(FeedModelState(refreshing = true))
-            try {
-                repository.getAll()
-                _state.postValue(FeedModelState())
-            } catch (e: Exception) {
-                _state.value = FeedModelState(error = true)
-            }
-        }
 
-    }
     fun save() {
         viewModelScope.launch {
             edited.value?.let {
@@ -189,6 +168,4 @@ class PostViewModel @Inject constructor(
         }
 
     }
-
-
 }

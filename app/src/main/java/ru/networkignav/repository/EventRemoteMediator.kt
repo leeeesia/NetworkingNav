@@ -1,6 +1,7 @@
+@file:Suppress("KotlinConstantConditions")
+
 package ru.networkignav.repository
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -13,10 +14,10 @@ import ru.networkignav.dao.EventRemoteKeyDao
 import ru.networkignav.db.AppDb
 import ru.networkignav.entity.EventEntity
 import ru.networkignav.entity.EventKeyEntity
-import ru.networkignav.entity.PostRemoteKeyEntity
 import ru.networkignav.util.ApiError
 import java.io.IOException
 
+@Suppress("KotlinConstantConditions")
 @OptIn(ExperimentalPagingApi::class)
 class EventRemoteMediator(
     private val apiService: EventApiService,
@@ -82,7 +83,6 @@ class EventRemoteMediator(
                     }
 
                     LoadType.PREPEND -> {
-                        Log.d("MYLOG", "PREPEND $body")
                         eventRemoteKeyDao.insert(
                             EventKeyEntity(
                                 EventKeyEntity.KeyType.AFTER,

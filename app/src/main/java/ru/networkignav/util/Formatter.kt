@@ -1,11 +1,8 @@
 package ru.networkignav.util
 
 import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.Context
 import com.google.android.material.button.MaterialButton
-import java.math.RoundingMode
-import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -15,32 +12,6 @@ import java.util.Calendar
 import java.util.Locale
 
 object Formatter {
-    fun formatCount(count: Int): String? {
-        when (count) {
-            in 0..999 -> return count.toString()
-            in 1000..9999 -> {
-                val df = DecimalFormat("#.#")
-                df.roundingMode = RoundingMode.DOWN
-                val result = df.format(count / 1000.0)
-                return result.toString() + "K"
-            }
-
-            in 10000..999999 -> {
-                val df = DecimalFormat("#")
-                df.roundingMode = RoundingMode.DOWN
-                val result = df.format(count / 1000.0)
-                return result.toString() + "K"
-            }
-
-            in 1000000..999999999 -> {
-                val df = DecimalFormat("#.#")
-                df.roundingMode = RoundingMode.DOWN
-                val result = df.format(count / 1000000.0)
-                return result.toString() + "M"
-            }
-        }
-        return null
-    }
 
     fun formatJobDate(input: String): String {
         val jobDate = ZonedDateTime.parse(input, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
@@ -48,14 +19,6 @@ object Formatter {
         return DateTimeFormatter.ofPattern("dd.MM.yyyy")
             .format(jobDate)
     }
-
-    fun formatJobDateForEdit(input: String): String {
-        val jobDate = ZonedDateTime.parse(input, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
-            .withZoneSameInstant(ZoneId.systemDefault())
-        return DateTimeFormatter.ofPattern("yyyy-MM-dd")
-            .format(jobDate)
-    }
-
     fun formatPostDate(input: String): String {
         val postDate = ZonedDateTime.parse(input, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
             .withZoneSameInstant(ZoneId.systemDefault())
@@ -109,7 +72,6 @@ object Formatter {
         }
     }
 
-
     fun showDatePicker(button: MaterialButton, context: Context) {
         val calendar = Calendar.getInstance()
         val datePickerDialog = DatePickerDialog(
@@ -125,19 +87,5 @@ object Formatter {
             calendar.get(Calendar.DAY_OF_MONTH)
         )
         datePickerDialog.show()
-    }
-
-    fun showTimePicker(button: MaterialButton, context: Context) {
-        val calendar = Calendar.getInstance()
-        val timePickerDialog = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
-            calendar[Calendar.HOUR_OF_DAY] = hour
-            calendar[Calendar.MINUTE] = minute
-            val formattedTime = SimpleDateFormat("HH:mm", Locale.getDefault()).format(calendar.time)
-            button.text = formattedTime
-        }
-        TimePickerDialog(
-            context, timePickerDialog, calendar.get(Calendar.HOUR_OF_DAY),
-            calendar.get(Calendar.MINUTE), true
-        ).show()
     }
 }

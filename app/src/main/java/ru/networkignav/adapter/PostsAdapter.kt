@@ -1,16 +1,10 @@
 package ru.networkignav.adapter
 
 import android.content.Context
-import android.media.MediaPlayer
-import android.net.Uri
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.MediaController
 import android.widget.PopupMenu
-import android.widget.VideoView
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.isVisible
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
@@ -28,19 +22,14 @@ import ru.networkignav.dto.Post
 import ru.networkignav.util.Formatter.formatPostDate
 
 interface OnInteractionListener {
-    fun onLike(post: Post) {}
-    fun onDislike(post: Post) {}
+
     fun onEdit(post: Post) {}
     fun onRemove(post: Post) {}
     fun onEditEvent(event: Event) {}
     fun onRemoveEvent(event: Event) {}
     fun onEditJob(job: Job) {}
     fun onRemoveJob(job: Job) {}
-    fun onViewImage(post: Post) {}
-    fun onShare(post: Post) {}
-    fun onRefresh() {}
-    fun onRefreshJob() {}
-    fun onRefreshEvent() {}
+
     fun onAuthorClick(post: Post){}
 }
 
@@ -49,11 +38,7 @@ class PostsAdapter(
     private val onInteractionListener: OnInteractionListener,
 ) : PagingDataAdapter<FeedItem, RecyclerView.ViewHolder>(PostDiffCallback()) {
 
-    private val typeAd = 0
-    private val typePost = 1
-    private val typeDate = 2
     override fun getItemViewType(position: Int): Int = R.layout.post_item
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
@@ -75,12 +60,11 @@ class PostsAdapter(
     }
 
     class PostViewHolder(
-        private val context: Context,
+        context: Context,
         private val binding: PostItemBinding,
         private val onInteractionListener: OnInteractionListener,
     ) : RecyclerView.ViewHolder(binding.root) {
-        private val mediaController = MediaController(context)
-        val player = ExoPlayer.Builder(context).build()
+        private val player = ExoPlayer.Builder(context).build()
 
         init {
             binding.postAudio.player = player
@@ -92,7 +76,6 @@ class PostsAdapter(
                 author.text = post.author
                 content.text = post.content
                 createdAt.text = formatPostDate(post.published)
-                Log.d("MYLOG", "post ad")
                 val url = post.authorAvatar
                     ?: "https://ob-kassa.ru/content/front/buhoskol_tmp1/images/reviews-icon.jpg"
                 Glide.with(postUserAvatar)
@@ -190,7 +173,6 @@ class PostsAdapter(
         override fun areContentsTheSame(oldItem: FeedItem, newItem: FeedItem): Boolean {
             return oldItem == newItem
         }
-
 
     }
 }

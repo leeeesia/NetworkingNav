@@ -18,9 +18,7 @@ class SignUpViewModel @Inject constructor(
     private val repository: PostRepository,
 ): ViewModel() {
 
-
     private val _state = MutableLiveData(AuthModelState())
-
 
     fun signUp(login: String, password: String , name:String){
         viewModelScope.launch {
@@ -29,7 +27,7 @@ class SignUpViewModel @Inject constructor(
                 response.token?.let { appAuth.setAuth(response.id,response.token) }
                 _state.value = AuthModelState(isActing = true)
             }catch (e: Exception){
-                val resp = if (e is ApiError) AuthResponse(e.status, e.code) else AuthResponse()
+                val resp = if (e is ApiError) AuthResponse(e.status, e.ignoredCode) else AuthResponse()
                 _state.postValue(
                     AuthModelState(error = true, response = resp)
                 )

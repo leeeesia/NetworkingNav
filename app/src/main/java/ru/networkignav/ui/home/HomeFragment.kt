@@ -1,8 +1,6 @@
 package ru.networkignav.ui.home
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -10,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.MenuProvider
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -20,7 +17,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
@@ -51,10 +47,8 @@ class HomeFragment : Fragment(), OnInteractionListener {
     private val eventViewModel: EventViewModel by activityViewModels()
     private val authViewModel: AuthViewModel by viewModels()
 
-
     @Inject
     lateinit var appUser: AppAuth
-
 
     override fun onEdit(post: Post) {
         findNavController().navigate(
@@ -65,22 +59,11 @@ class HomeFragment : Fragment(), OnInteractionListener {
         viewModel.edit(post)
     }
 
-    override fun onViewImage(post: Post) {
-
-    }
-
-    override fun onLike(post: Post) {
-
-    }
-
     override fun onRemove(post: Post) {
         viewModel.removeById(post.id)
     }
 
 
-    override fun onShare(post: Post) {
-
-    }
     override fun onEditEvent(event: Event) {
         findNavController().navigate(
             R.id.action_navigation_home_to_newEventFragment,
@@ -101,7 +84,7 @@ class HomeFragment : Fragment(), OnInteractionListener {
 
             bundle.putString("userId", post.authorId.toString())
             viewModel.updateUserId(post.authorId.toString())
-            viewModel.loadWallByUserId(post.authorId.toString())
+            viewModel.loadWallByUserId()
 
             findNavController().navigate(R.id.action_navigation_home_to_wallFragment, bundle)
         }
@@ -171,12 +154,6 @@ class HomeFragment : Fragment(), OnInteractionListener {
             }
         )
         viewModel.dataType.observe(viewLifecycleOwner) { dataType ->
-            Log.d("MYLOG", "Setting data type: $dataType")
-            when (dataType) {
-                DataType.POSTS -> Log.d("MYLOG", "Setting data type 1 : $dataType ")
-                DataType.EVENTS -> Log.d("MYLOG", "Setting data type 2: $dataType ")
-                else -> Log.d("MYLOG", "NO $dataType")
-            }
             adapter = when (dataType) {
                 DataType.POSTS -> PostsAdapter(requireContext(), this)
                 DataType.EVENTS -> EventsAdapter(requireContext(), this)
@@ -233,17 +210,10 @@ class HomeFragment : Fragment(), OnInteractionListener {
             }
         }
 
-
-
         authViewModel.data.observe(viewLifecycleOwner) {
 
             adapter.refresh()
         }
-
-
-
-
-
 
         binding.fabNewer.setOnClickListener {
             viewModel.loadNewPosts()
@@ -260,6 +230,5 @@ class HomeFragment : Fragment(), OnInteractionListener {
 
         return binding.root
     }
-
 
 }

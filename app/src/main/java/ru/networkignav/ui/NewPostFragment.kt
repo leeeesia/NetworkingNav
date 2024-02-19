@@ -1,6 +1,5 @@
 package ru.networkignav.ui
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -8,9 +7,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.net.toFile
 import androidx.core.view.MenuProvider
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -24,7 +20,6 @@ import kotlinx.coroutines.flow.collectLatest
 import ru.networkignav.R
 import ru.networkignav.auth.AppAuth
 import ru.networkignav.databinding.FragmentNewPostBinding
-import ru.networkignav.model.PhotoModel
 import ru.networkignav.util.AndroidUtils
 import ru.networkignav.util.StringArg
 import ru.networkignav.viewmodel.PostViewModel
@@ -33,7 +28,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 @OptIn(ExperimentalCoroutinesApi::class)
 class NewPostFragment : Fragment() {
-
     companion object {
         var Bundle.textArg: String? by StringArg
     }
@@ -41,17 +35,7 @@ class NewPostFragment : Fragment() {
     private val viewModel: PostViewModel by activityViewModels()
     @Inject
     lateinit var appAuth: AppAuth
-    private val photoLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ){
-        if (it.resultCode == Activity.RESULT_OK){
-            val uri = requireNotNull( it.data?.data)
 
-            viewModel.setPhoto(PhotoModel(uri, uri.toFile()))
-        } else{
-            Toast.makeText(requireContext(), "Pick photo error", Toast.LENGTH_SHORT)
-        }
-    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -84,20 +68,6 @@ class NewPostFragment : Fragment() {
                 }
         }, viewLifecycleOwner)
 
-        //binding.takePhoto.setOnClickListener {
-        //    ImagePicker.with(this)
-        //        .cameraOnly()
-        //        .crop()
-        //        .compress(2048)
-        //        .createIntent(photoLauncher::launch)
-        //}
-        //binding.gallery.setOnClickListener {
-        //    ImagePicker.with(this)
-        //        .galleryOnly()
-        //        .crop()
-        //        .compress(2048)
-        //        .createIntent(photoLauncher::launch)
-        //}
         binding.clear.setOnClickListener {
             viewModel.clearPhoto()
         }

@@ -1,15 +1,11 @@
 package ru.networkignav
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -45,17 +41,14 @@ class MainActivity : AppCompatActivity() {
         viewModel.data.observe(this) {
             invalidateOptionsMenu()
         }
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 
         val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         val appBarConfiguration = AppBarConfiguration(
             setOf(R.id.navigation_home,  R.id.navigation_profile)
         )
-
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
@@ -73,9 +66,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-
         navView.setupWithNavController(navController)
-
 
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
@@ -95,14 +86,8 @@ class MainActivity : AppCompatActivity() {
                 }
 
             }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-                // Не используется
-            }
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                // Не используется
-            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
 

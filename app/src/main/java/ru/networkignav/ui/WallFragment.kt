@@ -1,6 +1,6 @@
 package ru.networkignav.ui
+
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +10,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.paging.PagingData
-import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,12 +22,10 @@ import ru.networkignav.adapter.PostsAdapter
 import ru.networkignav.databinding.FragmentWallBinding
 import ru.networkignav.dto.Post
 import ru.networkignav.ui.profile.ProfileViewModel
-import ru.networkignav.viewmodel.PostViewModel
 
 
 @ExperimentalCoroutinesApi
 class WallFragment: Fragment() {
-    private val postViewModel: PostViewModel by activityViewModels()
     private val profileViewModel: ProfileViewModel by activityViewModels()
 
     override fun onCreateView(
@@ -40,51 +37,14 @@ class WallFragment: Fragment() {
         profileViewModel.getUser(userId ?: "")
 
         val postAdapter = PostsAdapter(requireContext(), object : OnInteractionListener {
-            override fun onEdit(post: Post) {
-
-            }
-
-            override fun onViewImage(post: Post) {
-
-            }
-
-            override fun onLike(post: Post) {
-
-            }
-
-            override fun onRemove(post: Post) {
-
-            }
-
-
-            override fun onShare(post: Post) {
-
-            }
+            override fun onEdit(post: Post) {}
+            override fun onRemove(post: Post) {}
         })
 
-        val jobAdapter = JobsAdapter(requireContext(), object : OnInteractionListener {
-
-            override fun onEdit(post: Post) {
-
-            }
-
-            override fun onViewImage(post: Post) {
-
-            }
-
-            override fun onLike(post: Post) {
-
-            }
-
-            override fun onRemove(post: Post) {
-
-            }
-
-
-            override fun onShare(post: Post) {
-
-            }
-        },false)
+        val jobAdapter = JobsAdapter(object : OnInteractionListener {
+            override fun onEdit(post: Post) {}
+            override fun onRemove(post: Post) {}
+        }, false)
         binding.newsFeedRecyclerView.adapter = postAdapter.withLoadStateHeaderAndFooter(
             header = PostLoadingStateAdapter {
 
@@ -100,7 +60,7 @@ class WallFragment: Fragment() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-                profileViewModel.data_user.collectLatest {
+                profileViewModel.dataUser.collectLatest {
                     val pagingData = PagingData.from(it)
                     postAdapter.submitData(pagingData)
                 }
@@ -109,15 +69,12 @@ class WallFragment: Fragment() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-                profileViewModel.data_job.collectLatest {
+                profileViewModel.dataJob.collectLatest {
                     val pagingData = PagingData.from(it)
                     jobAdapter.submitData(pagingData)
                 }
             }
         }
-
-
-
 
         binding.apply {
             toggleJobsButton.setOnClickListener {
@@ -139,8 +96,6 @@ class WallFragment: Fragment() {
                     .into(profileAvatar)
             }
         }
-
-
 
         postAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {

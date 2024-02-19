@@ -17,10 +17,8 @@ import ru.networkignav.dto.Job
 import ru.networkignav.dto.Post
 import ru.networkignav.entity.PostEntity
 import ru.networkignav.model.FeedModelState
-import ru.networkignav.model.PhotoModel
 import ru.networkignav.repository.PostRepository
 import ru.networkignav.util.DataType
-import ru.networkignav.util.SingleLiveEvent
 import javax.inject.Inject
 
 private val empty: Post =
@@ -59,15 +57,15 @@ class ProfileViewModel @Inject constructor(
     val state: LiveData<FeedModelState> get() = _state
 
     val data: Flow<List<FeedItem>> = appAuth.state
-        .flatMapLatest { repository.data_profile }
+        .flatMapLatest { repository.dataProfile }
         .flowOn(Dispatchers.Default)
 
-    val data_user: Flow<List<FeedItem>> = appAuth.state
-        .flatMapLatest { repository.data_user }
+    val dataUser: Flow<List<FeedItem>> = appAuth.state
+        .flatMapLatest { repository.dataUser }
         .flowOn(Dispatchers.Default)
 
-    val data_job: Flow<List<FeedItem>> = appAuth.state
-        .flatMapLatest { repository.data_job }
+    val dataJob: Flow<List<FeedItem>> = appAuth.state
+        .flatMapLatest { repository.dataJob }
         .flowOn(Dispatchers.Default)
 
     val job: Flow<List<FeedItem>> = appAuth.state
@@ -80,7 +78,6 @@ class ProfileViewModel @Inject constructor(
 
 
     private val _dataType = MutableLiveData<DataType>()
-    val dataType: LiveData<DataType> = _dataType
 
     fun setDataType(dataType: DataType) {
         _dataType.value = dataType
@@ -95,21 +92,14 @@ class ProfileViewModel @Inject constructor(
     val wuser: LiveData<PostEntity.Users>
         get() = _wuser
 
-    val edited = MutableLiveData(empty)
-    val editedJob = MutableLiveData(emptyJob)
-    private val _postCreated = SingleLiveEvent<Unit>()
-    val postCreated: LiveData<Unit>
-        get() = _postCreated
+    private val edited = MutableLiveData(empty)
+    private val editedJob = MutableLiveData(emptyJob)
 
     init {
         getProfile()
     }
 
-    private val _photo = MutableLiveData<PhotoModel?>(null)
-    val photo: LiveData<PhotoModel?>
-        get() = _photo
-
-    fun getProfile() = viewModelScope.launch {
+    private fun getProfile() = viewModelScope.launch {
         _state.postValue(FeedModelState(loading = true))
         try {
             _user.value = repository.getProfile()
@@ -162,6 +152,4 @@ class ProfileViewModel @Inject constructor(
         }
 
     }
-
-
 }

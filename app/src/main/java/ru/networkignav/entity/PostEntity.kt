@@ -3,7 +3,6 @@ package ru.networkignav.entity
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.Relation
 import ru.networkignav.dto.Attachment
 import ru.networkignav.dto.Post
 
@@ -54,8 +53,5 @@ data class PostEntity(
 
     }
 }
-fun List<PostEntity>.toDto():List<Post> = map(PostEntity::toDto)
-fun List<Post>.toEntity(hidden: Boolean = false): List<PostEntity> = map(PostEntity.Companion::fromDto).map{
-    it.copy(hidden = hidden)
-}
+
 

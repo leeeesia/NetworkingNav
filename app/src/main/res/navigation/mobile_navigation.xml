@@ -65,7 +65,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="ru.netology.nmedia.activity.SignUpFragment"
+        android:name="ru.networkignav.ui.SignUpFragment"
         android:label="SignUpFragment" />
     <fragment
         android:id="@+id/newPostFragment"

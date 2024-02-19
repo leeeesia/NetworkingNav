@@ -11,10 +11,10 @@ import java.io.File
 
 interface PostRepository {
     val data: Flow<PagingData<FeedItem>>
-    val data_profile: Flow<List<FeedItem>>
-    val data_user: Flow<List<FeedItem>>
+    val dataProfile: Flow<List<FeedItem>>
+    val dataUser: Flow<List<FeedItem>>
     val user: Flow<PostEntity.Users>
-    val data_job: Flow<List<FeedItem>>
+    val dataJob: Flow<List<FeedItem>>
     val job: Flow<List<FeedItem>>
 
     var userId:String
@@ -25,7 +25,6 @@ interface PostRepository {
     suspend fun getJob(): List<Job>
     suspend fun getMyJob(): List<Job>
     suspend fun getPostsByUserId(userId: String)
-
 
     fun getNewPost()
     fun updateUserId(newUserId: String)
@@ -39,6 +38,5 @@ interface PostRepository {
     suspend fun removeById(id: Int)
 
     suspend fun removeJobById(id: Int)
-
 
 }

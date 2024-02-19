@@ -1,6 +1,5 @@
 package ru.networkignav.repository
 
-
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -18,15 +17,13 @@ import ru.networkignav.entity.EventEntity
 import ru.networkignav.util.ApiError
 import ru.networkignav.util.NetworkError
 import ru.networkignav.util.UnknownError
-import java.io.File
 import java.io.IOException
 import javax.inject.Inject
-
 
 class EventRepositoryImpl @Inject constructor(
     private val eventDao: EventDao,
     private val apiService: EventApiService,
-    private val eventKeyDao: EventRemoteKeyDao,
+    eventKeyDao: EventRemoteKeyDao,
     appDb: AppDb
 ): EventRepository {
     @OptIn(ExperimentalPagingApi::class)
@@ -95,11 +92,4 @@ class EventRepositoryImpl @Inject constructor(
             throw UnknownError
         }
     }
-
-    override suspend fun saveWithAttachment(event: Event, file: File) {
-
-    }
-
-
-
 }

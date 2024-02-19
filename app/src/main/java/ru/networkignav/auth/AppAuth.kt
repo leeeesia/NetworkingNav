@@ -2,15 +2,10 @@ package ru.networkignav.auth
 
 import android.content.Context
 import androidx.core.content.edit
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import ru.networkignav.api.PostApiService
 import ru.networkignav.model.AuthModel
-import ru.networkignav.model.PushToken
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,10 +19,6 @@ class AppAuth @Inject constructor(
     private val _state = MutableStateFlow<AuthModel?>(null)
     val state = _state.asStateFlow()
 
-
-    var pushToken: PushToken? = null
-
-
     init {
         val token = prefs.getString(TOKEN_KEY, null)
         val id = prefs.getInt(ID_KEY, 0)
@@ -37,7 +28,6 @@ class AppAuth @Inject constructor(
         } else {
             _state.value = AuthModel(id, token)
         }
-        //sendPushToken()
     }
 
     @Synchronized
@@ -48,20 +38,7 @@ class AppAuth @Inject constructor(
         }
 
         _state.value = AuthModel(id, token)
-        //sendPushToken()
-    }
 
-
-
-
-    @Synchronized
-    fun removeAuth() {
-        _state.value = AuthModel()
-        with(prefs.edit()) {
-            clear()
-            commit()
-        }
-        //sendPushToken()
     }
 
     @Synchronized
@@ -69,15 +46,6 @@ class AppAuth @Inject constructor(
         prefs.edit { clear() }
         _state.value = null
     }
-
-    @InstallIn(SingletonComponent::class)
-    @EntryPoint
-    interface AppAuthEntryPoint {
-        fun getApiService(): PostApiService
-    }
-
-
-
 
     fun isUserValid() = state.value != null
 

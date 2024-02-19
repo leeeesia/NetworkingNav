@@ -84,7 +84,4 @@ data class AttachmentEmbeddable(
     }
 }
 
-fun List<EventEntity>.toDtoList(): List<Event> = map(EventEntity::toDto)
-
-fun List<Event>.toEntityList(): List<EventEntity> = map(EventEntity.Companion::fromDto)
 

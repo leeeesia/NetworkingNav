@@ -1,15 +1,11 @@
 package ru.networkignav.repository
 
-
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.map
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import okhttp3.MultipartBody
@@ -26,22 +22,18 @@ import ru.networkignav.dto.FeedItem
 import ru.networkignav.dto.Job
 import ru.networkignav.dto.Media
 import ru.networkignav.dto.Post
-import ru.networkignav.entity.JobEntity
 import ru.networkignav.entity.PostEntity
-import ru.networkignav.entity.toEntity
 import ru.networkignav.model.AuthModel
 import ru.networkignav.util.ApiError
 import ru.networkignav.util.NetworkError
 import ru.networkignav.util.UnknownError
 import java.io.File
 import java.io.IOException
-import java.util.concurrent.CancellationException
 import javax.inject.Inject
 
 
 class PostRepositoryImpl @Inject constructor(
     private val dao: PostDao,
-    private val dao_profile: PostDao,
     private val apiService: PostApiService,
     private val jobApiService: JobApiService,
     private val appAuth: AppAuth,
@@ -64,8 +56,7 @@ class PostRepositoryImpl @Inject constructor(
     ).flow
         .map { it.map(PostEntity::toDto) }
 
-
-    override val data_profile: Flow<List<FeedItem>> = flow {
+    override val dataProfile: Flow<List<FeedItem>> = flow {
         try {
             val response = apiService.getMyWall()
             if (!response.isSuccessful) {
@@ -82,7 +73,7 @@ class PostRepositoryImpl @Inject constructor(
     }
 
 
-    override val data_user: Flow<List<FeedItem>> = flow {
+    override val dataUser: Flow<List<FeedItem>> = flow {
         try {
 
             val response = apiService.getWallByAuthor(userId)
@@ -99,10 +90,9 @@ class PostRepositoryImpl @Inject constructor(
         }
     }
 
-    override val data_job: Flow<List<FeedItem>> = flow {
+    override val dataJob: Flow<List<FeedItem>> = flow {
         try {
             val response = jobApiService.getJobs(userId)
-
 
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
@@ -235,7 +225,6 @@ class PostRepositoryImpl @Inject constructor(
     override suspend fun removeById(id: Int) {
         try {
             val response = apiService.deletePost(id.toString())
-            Log.d("MYLOG", " removeById2")
             dao.removeById(id.toString())
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
@@ -262,9 +251,7 @@ class PostRepositoryImpl @Inject constructor(
     }
 
     override fun updateUserId(newUserId: String) {
-        Log.d("MYLOG", "userId $userId")
         userId = newUserId
-        Log.d("MYLOG", "userId $userId")
     }
 
 
@@ -359,6 +346,4 @@ class PostRepositoryImpl @Inject constructor(
             throw UnknownError
         }
     }
-
-
 }

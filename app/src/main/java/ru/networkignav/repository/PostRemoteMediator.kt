@@ -1,20 +1,18 @@
 package ru.networkignav.repository
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import retrofit2.HttpException
+import ru.networkignav.api.PostApiService
 import ru.networkignav.dao.PostDao
 import ru.networkignav.dao.PostRemoteKeyDao
+import ru.networkignav.db.AppDb
 import ru.networkignav.entity.PostEntity
 import ru.networkignav.entity.PostRemoteKeyEntity
 import ru.networkignav.util.ApiError
-import ru.networkignav.api.PostApiService
-import ru.networkignav.db.AppDb
-
 import java.io.IOException
 
 @OptIn(ExperimentalPagingApi::class)
@@ -53,7 +51,6 @@ class PostRemoteMediator(
             if (body.isEmpty()) return MediatorResult.Success(
                 endOfPaginationReached = true
             )
-
 
             appDb.withTransaction {
 
@@ -100,7 +97,6 @@ class PostRemoteMediator(
                 postDao.insert(body.map(PostEntity::fromDto))
 
             }
-
             return MediatorResult.Success(body.isEmpty())
         } catch (e: IOException) {
             return MediatorResult.Error(e)

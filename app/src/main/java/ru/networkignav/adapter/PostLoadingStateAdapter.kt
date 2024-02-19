@@ -23,8 +23,6 @@ class PostLoadingStateAdapter(
             ItemLoadingBinding.inflate(LayoutInflater.from(parent.context), parent, false),
             retryListener,
         )
-
-
 }
 
 class PostLoadingViewHolder(
@@ -39,7 +37,5 @@ class PostLoadingViewHolder(
                 retryListener()
             }
         }
-
-
     }
 }

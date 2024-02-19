@@ -7,15 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import ru.networkignav.viewmodel.SignInViewModel
 import ru.networkignav.R
 import ru.networkignav.auth.AppAuth
 import ru.networkignav.databinding.FragmentSigninBinding
+import ru.networkignav.viewmodel.SignInViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -47,7 +45,6 @@ class SignInFragment : Fragment() {
             viewModel.signIn(login, password)
 
             it?.let { findNavController().navigate(R.id.action_signInFragment_to_navigation_profile) }
-
 
         }
         binding.registration.setOnClickListener {

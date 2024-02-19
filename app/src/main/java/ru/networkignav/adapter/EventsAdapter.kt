@@ -1,11 +1,9 @@
 package ru.networkignav.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.MediaController
 import android.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.media3.common.MediaItem
@@ -19,7 +17,6 @@ import ru.networkignav.databinding.EventItemBinding
 import ru.networkignav.dto.AttachmentType
 import ru.networkignav.dto.Event
 import ru.networkignav.dto.FeedItem
-import ru.networkignav.dto.Post
 import ru.networkignav.util.Formatter
 
 
@@ -28,59 +25,46 @@ class EventsAdapter(
     private val onInteractionListener: OnInteractionListener,
 ) : PagingDataAdapter<FeedItem, RecyclerView.ViewHolder>(EventDiffCallback()) {
 
-    private val typeAd = 0
-    private val typePost = 1
-    private val typeDate = 2
     override fun getItemViewType(position: Int): Int = R.layout.event_item
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
         when (viewType) {
             R.layout.event_item -> {
-                Log.d("MYLOG", "onCreateViewHolder")
                 val binding =
                     EventItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 EventViewHolder(context, binding, onInteractionListener)
             }
 
             else -> {
-                Log.d("MYLOG", "onCreateViewHolder error")
                 error("unknown item type: $viewType")
             }
         }
-
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = getItem(position)) {
             is Event -> (holder as? EventViewHolder)?.bind(item)
             else -> {
-                Log.d("MYLOG", "onBindViewHolder error")
                 error("unknown item type")}
         }
     }
 
     class EventViewHolder(
-        private val context: Context,
+        context: Context,
         private val binding: EventItemBinding,
         private val onInteractionListener: OnInteractionListener,
     ) : RecyclerView.ViewHolder(binding.root) {
-        private val mediaController = MediaController(context)
-        val player = ExoPlayer.Builder(context).build()
+        private val player = ExoPlayer.Builder(context).build()
 
         init {
-            Log.d("MYLOG", "init EventViewHolder")
             binding.eventAudio.player = player
             binding.eventAudio.player = player
         }
 
         fun bind(event: Event) {
-            Log.d("MYLOG", "ываываываы")
             binding.apply {
                 author.text = event.author
                 eventInfo.text = event.content
                 createdAt.text = Formatter.formatPostDate(event.published)
-
-                Log.d("MYLOG", "event ad")
 
                 val url = event.authorAvatar
                     ?: "https://ob-kassa.ru/content/front/buhoskol_tmp1/images/reviews-icon.jpg"
@@ -170,7 +154,6 @@ class EventsAdapter(
         }
     }
 
-
     class EventDiffCallback : DiffUtil.ItemCallback<FeedItem>() {
         override fun areItemsTheSame(oldItem: FeedItem, newItem: FeedItem): Boolean {
             if (oldItem::class != newItem::class) {
@@ -182,8 +165,6 @@ class EventsAdapter(
         override fun areContentsTheSame(oldItem: FeedItem, newItem: FeedItem): Boolean {
             return oldItem == newItem
         }
-
-
     }
 }
 

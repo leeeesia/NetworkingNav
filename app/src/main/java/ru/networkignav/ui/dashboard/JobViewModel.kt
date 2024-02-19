@@ -16,7 +16,6 @@ import ru.networkignav.dto.FeedItem
 import ru.networkignav.dto.Job
 import ru.networkignav.entity.PostEntity
 import ru.networkignav.model.FeedModelState
-import ru.networkignav.model.PhotoModel
 import ru.networkignav.repository.PostRepository
 import ru.networkignav.util.SingleLiveEvent
 import javax.inject.Inject
@@ -43,39 +42,15 @@ class JobViewModel @Inject constructor(
     val state: LiveData<FeedModelState> get() = _state
 
     val data: Flow<List<FeedItem>> = appAuth.state
-        .flatMapLatest { repository.data_profile }
+        .flatMapLatest { repository.dataProfile }
         .flowOn(Dispatchers.Default)
     private var _profile = MutableLiveData<PostEntity.Users>()
     val profile: LiveData<PostEntity.Users>
         get() = _profile
 
+    private val edited = MutableLiveData(empty)
 
-    val edited = MutableLiveData(empty)
-    private val _postCreated = SingleLiveEvent<Unit>()
-    val postCreated: LiveData<Unit>
-        get() = _postCreated
     private val _jobCreated = SingleLiveEvent<Unit>()
-    val jobCreated: LiveData<Unit>
-        get() = _jobCreated
-
-
-    private val _photo = MutableLiveData<PhotoModel?>(null)
-    val photo: LiveData<PhotoModel?>
-        get() = _photo
-
-
-
-    fun loadProfile() {
-        viewModelScope.launch {
-            _state.postValue(FeedModelState(loading = true))
-            try {
-                _profile.value = repository.getProfile()
-                _state.postValue(FeedModelState())
-            } catch (e: Exception) {
-                _state.value = FeedModelState(error = true)
-            }
-        }
-    }
 
     fun saveJob() {
         edited.value?.let { job ->
@@ -114,11 +89,9 @@ class JobViewModel @Inject constructor(
         }
     }
 
-    fun clear() {
+    private fun clear() {
         edited.value?.let {
             edited.value = empty
         }
     }
-
-
 }

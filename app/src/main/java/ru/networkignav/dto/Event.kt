@@ -1,6 +1,5 @@
 package ru.networkignav.dto
 
-import ru.networkignav.entity.AttachmentEmbeddable
 import ru.networkignav.entity.PostEntity
 
 data class Event(

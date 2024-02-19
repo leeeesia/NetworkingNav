@@ -27,5 +27,4 @@ interface RepositoryModule {
         impl: EventRepositoryImpl
     ): EventRepository
 
-
 }
